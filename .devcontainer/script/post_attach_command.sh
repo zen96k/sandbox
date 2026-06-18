@@ -9,3 +9,4 @@ PROJECT_DIRNAME=$(cd ${SCRIPT_DIRNAME}/../.. && pwd)
 
 cd ${PROJECT_DIRNAME}/application
 mise install
+mise exec -- npm install
