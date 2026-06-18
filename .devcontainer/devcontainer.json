@@ -2,7 +2,8 @@
   "name": "claude-devcontainer",
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
   "features": {
-    "ghcr.io/devcontainers-extra/features/claude-code": {}
+    "ghcr.io/devcontainers-extra/features/claude-code": {},
+    "ghcr.io/devcontainers-extra/features/mise": {}
   },
   "init": true,
   "runArgs": ["--env-file", ".devcontainer/devcontainer.env", "--rm"],
@@ -27,7 +28,7 @@
   },
   "initializeCommand": "mkdir -p .claude",
   "onCreateCommand": "bash .devcontainer/script/on_create_command.sh",
-  // "postStartCommand": "bash .devcontainer/script/post_start_command.sh",
+  "postStartCommand": "bash .devcontainer/script/post_start_command.sh",
   "postAttachCommand": "bash .devcontainer/script/post_attach_command.sh",
   "waitFor": "postStartCommand"
 }
