@@ -9,4 +9,5 @@ PROJECT_DIRNAME=$(cd ${SCRIPT_DIRNAME}/../.. && pwd)
 
 cd ${PROJECT_DIRNAME}
 
+echo 'eval "$(mise activate bash)" ' >> ${HOME}/.bashrc
 cp -rfv .zshrc ${HOME}/.zshrc
