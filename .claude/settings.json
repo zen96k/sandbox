@@ -1,0 +1,5 @@
+{
+  "env": {
+    "PATH": "/home/vscode/.local/share/mise/shims:$PATH"
+  }
+}
