@@ -9,7 +9,10 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@libsql/client": "0.17.4",
     "@nuxt/ui": "4.9.0",
+    "dotenv": "17.4.2",
+    "drizzle-orm": "0.45.2",
     "nuxt": "4.4.8",
     "tailwindcss": "4.3.1",
     "vue": "3.5.35",
@@ -17,11 +20,13 @@
   },
   "devDependencies": {
     "@nuxt/eslint": "1.16.0",
+    "drizzle-kit": "0.31.10",
     "eslint": "10.5.0",
     "eslint-config-prettier": "10.1.8",
     "prettier": "3.8.4",
     "prettier-plugin-organize-imports": "4.3.0",
     "prettier-plugin-tailwindcss": "0.8.0",
+    "tsx": "4.22.4",
     "typescript": "6.0.3"
   }
 }
