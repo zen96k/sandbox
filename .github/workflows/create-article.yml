@@ -1,0 +1,24 @@
+name: Create Article
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
+
+jobs:
+  create-article:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sandbox
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: jdx/mise-action@v2
+
+      - run: npm clean-install
+
+      - run: npx tsx server/batch/create-article.ts
+        env:
+          DB_FILE_NAME: ${{ secrets.DB_FILE_NAME }}
