@@ -4,6 +4,7 @@ import type { Article, ReadOption } from "../repository/article.repository"
 
 export type ArticleRepository = {
   readArticles(option?: ReadOption): Promise<Article[]>
+  countArticles(): Promise<number>
 }
 
 const orderableColumns = {
@@ -46,7 +47,9 @@ export const generateArticleService = (repository: ArticleRepository) => {
       })
 
       return articles
-    }
+    },
+
+    countArticles: (): Promise<number> => repository.countArticles()
   }
 
   return service
