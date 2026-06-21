@@ -1,6 +1,6 @@
 <template>
   <UContainer class="py-8">
-    <h1 class="mb-6 text-2xl font-bold">人気記事</h1>
+    <h1 class="mb-6 text-2xl font-bold">記事一覧</h1>
     <div
       v-if="status === 'pending'"
       class="flex justify-center py-12"
@@ -41,15 +41,15 @@
               {{ article.title }}
             </h2>
             <div class="flex items-center gap-3 text-sm text-gray-500">
-              <UBadge
-                variant="soft"
-                size="xs"
-              >
-                {{ article.publisherName }}
-              </UBadge>
-              <span>{{ article.author }}</span>
+              <span>
+                From:
+                <UBadge variant="soft">
+                  {{ article.publisherName }}
+                </UBadge>
+              </span>
+              <span>Author: {{ article.author }}</span>
               <ClientOnly>
-                <span>{{ formatDate(article.publishedAt) }}</span>
+                <span>Published At: {{ formatDate(article.publishedAt) }}</span>
               </ClientOnly>
             </div>
           </a>
@@ -90,5 +90,6 @@
     return data.value?.total ?? 0
   })
 
-  const formatDate = (date: string | Date) => format(new Date(date), "long")
+  const formatDate = (date: string | Date) =>
+    format(new Date(date), "YYYY-MM-DD HH:mm:ss")
 </script>
