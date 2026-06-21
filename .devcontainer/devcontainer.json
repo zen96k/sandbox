@@ -1,5 +1,5 @@
 {
-  "name": "claude-devcontainer",
+  "name": "sandbox-devcontainer",
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
   "features": {
     "ghcr.io/devcontainers-extra/features/claude-code": {},
