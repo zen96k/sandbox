@@ -1,4 +1,4 @@
-import { type SQL, eq } from "drizzle-orm"
+import { type SQL, count, eq } from "drizzle-orm"
 import { db } from "../db"
 import { article, publisher } from "../db/schema"
 
@@ -41,5 +41,16 @@ export const articleRepository = {
     }
 
     return await query
+  },
+
+  countArticles: async (): Promise<number> => {
+    const [{ count: total }] = (await db
+      .select({ count: count() })
+      .from(article)
+      .innerJoin(publisher, eq(article.publisherId, publisher.id))) as [
+      { count: number }
+    ]
+
+    return total
   }
 }
