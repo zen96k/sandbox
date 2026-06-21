@@ -8,7 +8,11 @@ const articleService = generateArticleService(articleRepository)
 
 export default defineEventHandler(async (event) => {
   const body = await readBody<GetArticlesOption>(event)
-  const articles = await articleService.readArticles(body)
 
-  return articles
+  const [articles, total] = await Promise.all([
+    articleService.readArticles(body),
+    articleService.countArticles()
+  ])
+
+  return { articles, total }
 })
