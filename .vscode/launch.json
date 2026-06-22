@@ -5,8 +5,8 @@
       "type": "node",
       "request": "launch",
       "name": "Sandbox Server",
-      "preLaunchTask": "npm-install-sandbox",
-      "runtimeExecutable": "${env:HOME}/.local/share/mise/shims/npm",
+      "preLaunchTask": "npm: install - sandbox",
+      "runtimeExecutable": "npm",
       "cwd": "${workspaceFolder}/sandbox",
       "runtimeArgs": ["run", "dev"],
       "outputCapture": "std"

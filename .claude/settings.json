@@ -1,6 +1,3 @@
 {
-  "effortLevel": "medium",
-  "env": {
-    "PATH": "/home/vscode/.local/share/mise/shims:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-  }
+  "effortLevel": "medium"
 }
