@@ -23,6 +23,13 @@
       記事がありません
     </div>
     <template v-else>
+      <div class="mb-4 flex justify-center">
+        <UPagination
+          v-model:page="page"
+          :total="total"
+          :items-per-page="articleLimit"
+        />
+      </div>
       <ul class="space-y-4">
         <li
           v-for="article in articles"
