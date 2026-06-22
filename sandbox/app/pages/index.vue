@@ -16,59 +16,79 @@
     >
       エラーが発生しました
     </div>
-    <div
-      v-else-if="!articles.length"
-      class="py-12 text-center text-gray-500"
-    >
-      記事がありません
-    </div>
     <template v-else>
-      <div class="mb-4 flex justify-center">
-        <UPagination
-          v-model:page="page"
-          :total="total"
-          :items-per-page="articleLimit"
-        />
-      </div>
-      <ul class="space-y-4">
-        <li
-          v-for="article in articles"
-          :key="article.id"
-          class="hover:border-primary-400 rounded-lg border border-gray-200 p-4 transition-colors"
+      <div class="mb-4 flex flex-wrap gap-2">
+        <UButton
+          :variant="selectedPublisher === null ? 'solid' : 'ghost'"
+          @click="selectedPublisher = null"
         >
-          <a
-            :href="article.url"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="group block"
-          >
-            <h2
-              class="group-hover:text-primary-500 mb-1 text-base font-semibold transition-colors"
-            >
-              {{ article.title }}
-            </h2>
-            <div class="flex items-center gap-3 text-sm text-gray-500">
-              <span>
-                From:
-                <UBadge variant="soft">
-                  {{ article.publisherName }}
-                </UBadge>
-              </span>
-              <span>Author: {{ article.author }}</span>
-              <ClientOnly>
-                <span>Published At: {{ formatDate(article.publishedAt) }}</span>
-              </ClientOnly>
-            </div>
-          </a>
-        </li>
-      </ul>
-      <div class="mt-8 flex justify-center">
-        <UPagination
-          v-model:page="page"
-          :total="total"
-          :items-per-page="articleLimit"
-        />
+          すべて
+        </UButton>
+        <UButton
+          v-for="p in publishers"
+          :key="p.id"
+          :variant="selectedPublisher === p.name ? 'solid' : 'ghost'"
+          @click="selectedPublisher = p.name"
+        >
+          {{ p.name }}
+        </UButton>
       </div>
+      <div
+        v-if="!articles.length"
+        class="py-12 text-center text-gray-500"
+      >
+        記事がありません
+      </div>
+      <template v-else>
+        <div class="mb-4 flex justify-center">
+          <UPagination
+            v-model:page="page"
+            :total="total"
+            :items-per-page="articleLimit"
+          />
+        </div>
+        <ul class="space-y-4">
+          <li
+            v-for="article in articles"
+            :key="article.id"
+            class="hover:border-primary-400 rounded-lg border border-gray-200 p-4 transition-colors"
+          >
+            <a
+              :href="article.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group block"
+            >
+              <h2
+                class="group-hover:text-primary-500 mb-1 text-base font-semibold transition-colors"
+              >
+                {{ article.title }}
+              </h2>
+              <div class="flex items-center gap-3 text-sm text-gray-500">
+                <span>
+                  From:
+                  <UBadge variant="soft">
+                    {{ article.publisherName }}
+                  </UBadge>
+                </span>
+                <span>Author: {{ article.author }}</span>
+                <ClientOnly>
+                  <span>
+                    Published At: {{ formatDate(article.publishedAt) }}
+                  </span>
+                </ClientOnly>
+              </div>
+            </a>
+          </li>
+        </ul>
+        <div class="mt-8 flex justify-center">
+          <UPagination
+            v-model:page="page"
+            :total="total"
+            :items-per-page="articleLimit"
+          />
+        </div>
+      </template>
     </template>
   </UContainer>
 </template>
@@ -79,31 +99,46 @@
   const route = useRoute()
   const router = useRouter()
   const page = ref(Number(route.query.page) || 1)
+  const selectedPublisher = ref<string | null>(
+    (route.query.publisher as string) || null
+  )
   const articleLimit = 10
 
   watch(page, (value) => {
     router.replace({
-      query: { ...route.query, page: value === 1 ? undefined : value }
-    })
-  })
-
-  const { data, status } = await useFetch("/api/article/fetch", {
-    method: "POST",
-    body: computed(() => {
-      return {
-        orderBy: [{ column: "publishedAt", direction: "desc" }],
-        limit: articleLimit,
-        offset: (page.value - 1) * articleLimit
+      query: {
+        page: value === 1 ? undefined : value,
+        publisher: selectedPublisher.value ?? undefined
       }
     })
   })
 
-  const articles = computed(() => {
-    return data.value?.articles ?? []
+  watch(selectedPublisher, (value) => {
+    page.value = 1
+    router.replace({ query: { publisher: value ?? undefined } })
   })
-  const total = computed(() => {
-    return data.value?.total ?? 0
+
+  const { data, status } = await useFetch("/api/article/fetch", {
+    method: "POST",
+    body: computed(() => ({
+      orderBy: [{ column: "publishedAt", direction: "desc" }],
+      where: selectedPublisher.value
+        ? [
+            {
+              column: "publisherName",
+              operator: "eq",
+              value: selectedPublisher.value
+            }
+          ]
+        : undefined,
+      limit: articleLimit,
+      offset: (page.value - 1) * articleLimit
+    }))
   })
+
+  const articles = computed(() => data.value?.articles ?? [])
+  const total = computed(() => data.value?.total ?? 0)
+  const publishers = computed(() => data.value?.publishers ?? [])
 
   const formatDate = (date: string | Date) =>
     format(new Date(date), "YYYY-MM-DD HH:mm:ss")
