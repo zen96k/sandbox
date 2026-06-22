@@ -10,12 +10,13 @@ export default defineEventHandler(async (event) => {
   const body = await readBody<GetArticlesOption>(event)
 
   try {
-    const [articles, total] = await Promise.all([
+    const [articles, total, publishers] = await Promise.all([
       articleService.readArticles(body),
-      articleService.countArticles()
+      articleService.countArticles({ where: body?.where }),
+      articleService.readPublishers()
     ])
 
-    return { articles, total }
+    return { articles, total, publishers }
   } catch {
     throw createError({ statusCode: 500, message: "記事の取得に失敗しました" })
   }

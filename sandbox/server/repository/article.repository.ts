@@ -11,12 +11,22 @@ export type Article = {
   publisherName: string
 }
 
-export type ReadOption = { orderBy?: SQL[]; limit?: number; offset?: number }
+export type Publisher = { id: number; name: string }
+
+export type ReadOption = {
+  where?: SQL
+  orderBy?: SQL[]
+  limit?: number
+  offset?: number
+}
 
 export const articleRepository = {
-  readArticles: async ({ orderBy, limit, offset }: ReadOption = {}): Promise<
-    Article[]
-  > => {
+  readArticles: async ({
+    where,
+    orderBy,
+    limit,
+    offset
+  }: ReadOption = {}): Promise<Article[]> => {
     let query = db
       .select({
         id: article.id,
@@ -30,6 +40,9 @@ export const articleRepository = {
       .innerJoin(publisher, eq(article.publisherId, publisher.id))
       .$dynamic()
 
+    if (where) {
+      query = query.where(where)
+    }
     if (orderBy) {
       query = query.orderBy(...orderBy)
     }
@@ -43,14 +56,27 @@ export const articleRepository = {
     return await query
   },
 
-  countArticles: async (): Promise<number> => {
-    const [{ count: total }] = (await db
+  countArticles: async ({ where }: { where?: SQL } = {}): Promise<number> => {
+    let query = db
       .select({ count: count() })
       .from(article)
-      .innerJoin(publisher, eq(article.publisherId, publisher.id))) as [
-      { count: number }
-    ]
+      .innerJoin(publisher, eq(article.publisherId, publisher.id))
+      .$dynamic()
+
+    if (where) {
+      query = query.where(where)
+    }
+
+    const [{ count: total }] = (await query) as [{ count: number }]
 
     return total
+  },
+
+  readPublishers: async (): Promise<Publisher[]> => {
+    return await db
+      .selectDistinct({ id: publisher.id, name: publisher.name })
+      .from(article)
+      .innerJoin(publisher, eq(article.publisherId, publisher.id))
+      .orderBy(publisher.name)
   }
 }
