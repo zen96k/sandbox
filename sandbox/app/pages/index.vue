@@ -104,6 +104,20 @@
   )
   const articleLimit = 10
 
+  watch(
+    () => route.query.page,
+    (value) => {
+      page.value = Number(value) || 1
+    }
+  )
+
+  watch(
+    () => route.query.publisher,
+    (value) => {
+      selectedPublisher.value = (value as string) || null
+    }
+  )
+
   watch(page, (value) => {
     router.replace({
       query: {
