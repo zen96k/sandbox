@@ -22,7 +22,7 @@
           :variant="selectedPublisher === null ? 'solid' : 'ghost'"
           @click="selectedPublisher = null"
         >
-          すべて
+          全て
         </UButton>
         <UButton
           v-for="p in publishers"
