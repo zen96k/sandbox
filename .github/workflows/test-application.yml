@@ -1,13 +1,23 @@
-name: Seed Database
+name: Test Application
 
 on:
+  pull_request:
+    paths:
+      - sandbox/**
+      - .github/workflows/test-application.yml
+  push:
+    branches:
+      - main
+    paths:
+      - sandbox/**
+      - .github/workflows/test-application.yml
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  seed-database:
+  test-application:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -18,6 +28,4 @@ jobs:
         with:
           working_directory: sandbox
       - run: npm clean-install
-      - run: npx tsx server/db/seed/index.ts
-        env:
-          DB_FILE_NAME: ${{ secrets.DB_FILE_NAME }}
+      - run: npm run test
