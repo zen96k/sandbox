@@ -1,0 +1,28 @@
+name: Test Application
+
+on:
+  pull_request:
+    paths:
+      - sandbox/**
+      - .github/workflows/test.yml
+  push:
+    branches:
+      - main
+    paths:
+      - sandbox/**
+      - .github/workflows/test.yml
+  workflow_dispatch:
+
+jobs:
+  test-application:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sandbox
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2
+        with:
+          working_directory: sandbox
+      - run: npm clean-install
+      - run: npm run test
