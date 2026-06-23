@@ -56,14 +56,14 @@
 </template>
 
 <script setup lang="ts">
-  const {
-    articleLimit,
-    selectedPublisher,
-    page,
-    total,
-    articles,
-    publishers,
-    status,
-    formatDate
-  } = await useArticleList()
+  import { breakpointsTailwind } from "@vueuse/core"
+
+  const breakpoints = useBreakpoints(breakpointsTailwind, { ssrWidth: 768 })
+  const isDesktop = breakpoints.greaterOrEqual("lg")
+  const articleLimit = computed(() => {
+    return isDesktop.value ? 15 : 10
+  })
+
+  const { selectedPublisher, page, total, articles, publishers, status } =
+    await useArticles({ articleLimit })
 </script>
