@@ -1,6 +1,10 @@
-import { format } from "@formkit/tempo"
+import type { Ref } from "vue"
 
-export const useArticleList = async () => {
+export const useArticles = async ({
+  articleLimit
+}: {
+  articleLimit: Readonly<Ref<number>>
+}) => {
   const route = useRoute()
   const router = useRouter()
   const page = ref(Number(route.query.page) || 1)
@@ -8,23 +12,6 @@ export const useArticleList = async () => {
   const selectedPublisher = ref<string | null>(
     (route.query.publisher as string) || null
   )
-
-  const articleLimit = ref(10)
-  const updateArticleLimit = ({ matches }: Pick<MediaQueryList, "matches">) => {
-    articleLimit.value = matches ? 15 : 10
-  }
-
-  let desktopMediaQuery: MediaQueryList | undefined
-
-  onMounted(() => {
-    desktopMediaQuery = window.matchMedia("(min-width: 1024px)")
-    updateArticleLimit(desktopMediaQuery)
-    desktopMediaQuery.addEventListener("change", updateArticleLimit)
-  })
-
-  onUnmounted(() => {
-    desktopMediaQuery?.removeEventListener("change", updateArticleLimit)
-  })
 
   watch(
     () => {
@@ -88,10 +75,6 @@ export const useArticleList = async () => {
     return data.value?.publishers ?? []
   })
 
-  const formatDate = (date: string | Date) => {
-    return format(new Date(date), "YYYY-MM-DD HH:mm:ss")
-  }
-
   return {
     articleLimit,
     selectedPublisher,
@@ -99,7 +82,6 @@ export const useArticleList = async () => {
     total,
     articles,
     publishers,
-    status,
-    formatDate
+    status
   }
 }
