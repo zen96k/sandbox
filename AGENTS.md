@@ -14,7 +14,7 @@
 
 ```bash
 # 依存関係のインストール
-npm clean-install
+npm install
 
 # 開発サーバー起動 (http://localhost:3000)
 npm run dev
