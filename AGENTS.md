@@ -86,3 +86,4 @@ RSSフィード -> batch/create-article.ts -> SQLite/Turso
 - DB スキーマ変更時は Drizzle のマイグレーションを生成し、関連テストを更新してください。
 - フロントエンドの状態は URL クエリと同期する既存方針に合わせてください。
 - ユーザーや他エージェントの未コミット変更を勝手に戻さないでください。
+- Codex がコミットを作成する場合は、コミットメッセージ末尾に `Co-authored-by: Codex <codex@openai.com>` を付けてください。
