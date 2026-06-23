@@ -4,7 +4,7 @@ import RssParser from "rss-parser"
 import { db } from "../db"
 import { article, publisher } from "../db/schema"
 
-const parser = new RssParser<{}, { author?: string }>()
+const parser = new RssParser<object, { author?: string }>()
 const publishers = await db.select().from(publisher)
 
 const allItems = (

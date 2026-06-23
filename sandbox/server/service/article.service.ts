@@ -12,6 +12,15 @@ export type ArticleRepository = {
   readPublishers(): Promise<Publisher[]>
 }
 
+export type WhereCondition = { column: string; operator: "eq"; value: string }
+
+export type GetArticlesOption = {
+  where?: WhereCondition[]
+  orderBy?: { column: string; direction: "asc" | "desc" }[]
+  limit?: number
+  offset?: number
+}
+
 const orderableColumns = {
   publishedAt: article.publishedAt,
   title: article.title,
@@ -23,15 +32,6 @@ type OrderableColumn = keyof typeof orderableColumns
 const filterableColumns = { publisherName: publisher.name } as const
 
 type FilterableColumn = keyof typeof filterableColumns
-
-export type WhereCondition = { column: string; operator: "eq"; value: string }
-
-export type GetArticlesOption = {
-  where?: WhereCondition[]
-  orderBy?: { column: string; direction: "asc" | "desc" }[]
-  limit?: number
-  offset?: number
-}
 
 export const buildWhereSQL = ({
   conditions
@@ -56,7 +56,7 @@ export const buildWhereSQL = ({
 }
 
 export const buildOrderSQL = (
-  orderBy: GetArticlesOption["orderBy"]
+  orderBy?: GetArticlesOption["orderBy"]
 ): SQL[] | undefined => {
   const expressions = orderBy
     ?.filter(({ column }) => {
@@ -64,28 +64,23 @@ export const buildOrderSQL = (
     })
     .map(({ column, direction }) => {
       const col = orderableColumns[column as OrderableColumn]
-      if (direction === "desc") {
-        return desc(col)
-      }
-      return asc(col)
+      return direction === "desc" ? desc(col) : asc(col)
     })
 
   return expressions?.length ? expressions : undefined
 }
 
 export const generateArticleService = (repository: ArticleRepository) => {
-  const service = {
+  return {
     readArticles: async ({
       where,
       orderBy,
       limit,
       offset
     }: GetArticlesOption = {}): Promise<Article[]> => {
-      const orderExpressions = buildOrderSQL(orderBy)
-
       return await repository.readArticles({
         where: buildWhereSQL({ conditions: where }),
-        orderBy: orderExpressions,
+        orderBy: buildOrderSQL(orderBy),
         limit,
         offset
       })
@@ -103,6 +98,4 @@ export const generateArticleService = (repository: ArticleRepository) => {
       return await repository.readPublishers()
     }
   }
-
-  return service
 }
