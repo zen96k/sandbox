@@ -10,3 +10,5 @@ PROJECT_DIRNAME=$(cd ${SCRIPT_DIRNAME}/../.. && pwd)
 cd ${PROJECT_DIRNAME}
 
 cp -rfv .zshrc ${HOME}/.zshrc
+mise install
+curl -fsSL https://claude.ai/install.sh | bash
