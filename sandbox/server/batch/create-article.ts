@@ -29,10 +29,12 @@ const allItems = (
       return items
     })
   )
-).flatMap((items) => items)
+).flatMap((items) => {
+  return items
+})
 
-await db.transaction((transaction) =>
-  transaction
+await db.transaction((transaction) => {
+  return transaction
     .insert(article)
     .values(allItems)
     .onConflictDoUpdate({
@@ -44,4 +46,4 @@ await db.transaction((transaction) =>
         updatedAt: sql`(unixepoch())`
       }
     })
-)
+})
