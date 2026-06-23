@@ -2,14 +2,15 @@
   "name": "sandbox-devcontainer",
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
   "features": {
-    "ghcr.io/devcontainers-extra/features/claude-code": {},
     "ghcr.io/devcontainers-extra/features/mise": {}
   },
   "init": true,
   "runArgs": ["--env-file", ".devcontainer/devcontainer.env", "--rm"],
   "forwardPorts": [3000, 4983],
   "mounts": [
-    "source=${localWorkspaceFolder}/.claude,target=/home/vscode/.claude,type=bind"
+    "source=${localWorkspaceFolder}/.claude,target=/home/vscode/.claude,type=bind",
+    "source=${localWorkspaceFolder}/.claude.json,target=/home/vscode/.claude.json,type=bind",
+    "source=${localWorkspaceFolder}/.codex,target=/home/vscode/.codex,type=bind"
   ],
   "remoteEnv": {
     "PATH": "/home/vscode/.local/share/mise/shims:${containerEnv:PATH}"
@@ -18,6 +19,7 @@
     "vscode": {
       "extensions": [
         "bradlc.vscode-tailwindcss",
+        "anthropic.claude-code",
         "dbaeumer.vscode-eslint",
         "eamodio.gitlens",
         "esbenp.prettier-vscode",
@@ -28,7 +30,7 @@
       ]
     }
   },
-  "initializeCommand": "mkdir -p .claude",
+  "initializeCommand": "bash .devcontainer/script/initialize_command.sh",
   "onCreateCommand": "bash .devcontainer/script/on_create_command.sh",
   "postStartCommand": "bash .devcontainer/script/post_start_command.sh",
   "postAttachCommand": "bash .devcontainer/script/post_attach_command.sh",

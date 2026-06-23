@@ -6,10 +6,12 @@ export const article = sqliteTable("article", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   publisherId: integer("publisher_id")
     .notNull()
-    .references(() => publisher.id, {
-      onDelete: "cascade",
-      onUpdate: "cascade"
-    }),
+    .references(
+      () => {
+        return publisher.id
+      },
+      { onDelete: "cascade", onUpdate: "cascade" }
+    ),
   title: text("title").notNull(),
   url: text("url").notNull().unique(),
   author: text("author").notNull(),
