@@ -9,7 +9,5 @@ PROJECT_DIRNAME=$(cd ${SCRIPT_DIRNAME}/../.. && pwd)
 
 cd ${PROJECT_DIRNAME}
 
-cp -rfv .zshrc ${HOME}/.zshrc
-mise install
-curl -fsSL https://claude.ai/install.sh | bash
-curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh
+mkdir -p .claude && touch .claude.json
+mkdir -p .codex

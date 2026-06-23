@@ -2,6 +2,9 @@
 .claude/*
 !.claude/settings.json
 
+.codex/*
+!.codex/config.toml
+
 *.env
 !default.env
 !*.default.env
