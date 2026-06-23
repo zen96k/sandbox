@@ -4,9 +4,9 @@ import { article, publisher } from "../../../../server/db/schema"
 import type { Publisher } from "../../../../server/repository/article.repository"
 import {
   buildOrderSQL,
-  buildWhereSQL,
-  generateArticleService
-} from "../../../../server/service/article.service"
+  buildWhereSQL
+} from "../../../../server/service/article/query-builder"
+import { generateArticleService } from "../../../../server/service/article/service"
 
 describe("buildWhereSQL", () => {
   test("returns undefined when no conditions given", () => {

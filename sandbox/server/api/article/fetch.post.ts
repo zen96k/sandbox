@@ -2,7 +2,7 @@ import { articleRepository } from "../../repository/article.repository"
 import {
   generateArticleService,
   type GetArticlesOption
-} from "../../service/article.service"
+} from "../../service/article/service"
 
 const articleService = generateArticleService(articleRepository)
 
