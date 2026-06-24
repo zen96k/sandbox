@@ -11,6 +11,9 @@ cd ${PROJECT_DIRNAME}
 
 rm -rf ${HOME}/.gitconfig
 git config --local core.trustctime false
+git config --local core.untrackedCache true
+git config --local fetch.prune true
+git config --local fetch.pruneTags true
 git config --local init.defaultBranch ${GIT_DEFAULT_BRANCH}
 git config --local user.name ${GIT_USER_NAME}
 git config --local user.email ${GIT_USER_EMAIL}
