@@ -16,6 +16,7 @@
   },
   "customizations": {
     "vscode": {
+      "copyGitConfig": false,
       "extensions": [
         "bradlc.vscode-tailwindcss",
         "anthropic.claude-code",
