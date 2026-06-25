@@ -1,4 +1,4 @@
-export function handleApiError(error: unknown, message: string): never {
+export const handleApiError = (error: unknown, message: string): never => {
   switch (isError(error) && error.statusCode) {
     case 422:
       throw createError({
