@@ -9,5 +9,5 @@ PROJECT_DIRNAME=$(cd ${SCRIPT_DIRNAME}/../.. && pwd)
 
 cd ${PROJECT_DIRNAME}
 
-mkdir -p .claude && touch .claude.json
+mkdir -p .claude
 mkdir -p .codex

@@ -1,4 +1,3 @@
-.claude.json
 .claude/*
 !.claude/settings.json
 
