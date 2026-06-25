@@ -1,4 +1,3 @@
-import { handleApiError } from "../../utils/handleApiError"
 import { db } from "../../db"
 import { generateArticleRepository } from "../../repository/article"
 import { generateArticleService } from "../../service/article"
@@ -7,9 +6,9 @@ import { bodySchema } from "./schema/body-schema"
 const articleService = generateArticleService(generateArticleRepository(db))
 
 export default defineEventHandler(async (event) => {
-  try {
-    const body = await readValidatedBody(event, bodySchema.parse)
+  const body = await readValidatedBody(event, bodySchema.parse)
 
+  try {
     const [articles, total, publishers] = await Promise.all([
       articleService.readArticles(body),
       articleService.countArticles({ where: body?.where }),
@@ -18,6 +17,6 @@ export default defineEventHandler(async (event) => {
 
     return { articles, total, publishers }
   } catch (error) {
-    handleApiError(error, "記事を取得できませんでした")
+    throw createError({ statusCode: 500, cause: error })
   }
 })
