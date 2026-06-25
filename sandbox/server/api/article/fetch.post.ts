@@ -1,6 +1,6 @@
 import { articleRepository } from "../../repository/article.repository"
 import { generateArticleService } from "../../service/article/service"
-import { bodySchema } from "./bodySchema"
+import { bodySchema } from "./schema/body-schema"
 
 const articleService = generateArticleService(articleRepository)
 

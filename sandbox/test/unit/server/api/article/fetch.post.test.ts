@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest"
-import { bodySchema } from "../../../../../server/api/article/bodySchema"
+import { bodySchema } from "../../../../../server/api/article/schema/body-schema"
 
 describe("bodySchema", () => {
   test("空オブジェクトを受け入れる", () => {
