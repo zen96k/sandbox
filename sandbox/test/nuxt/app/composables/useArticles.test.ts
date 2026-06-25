@@ -1,6 +1,6 @@
 import { mockNuxtImport } from "@nuxt/test-utils/runtime"
 import { flushPromises } from "@vue/test-utils"
-import { beforeEach, describe, expect, it, vi } from "vitest"
+import { beforeEach, describe, expect, test, vi } from "vitest"
 import { nextTick, readonly, ref } from "vue"
 
 // useFetch のみモック（useRoute/useRouter は Nuxt テスト環境の実物を使う）
@@ -38,37 +38,37 @@ describe("useArticles", () => {
     await useRouter().replace({ query: {} })
   })
 
-  it("articles が data.articles を返す", async () => {
+  test("articles が data.articles を返す", async () => {
     const { articles } = await useArticles({ articleLimit: readonly(ref(10)) })
     expect(articles.value).toHaveLength(1)
     expect(articles.value[0]!.title).toBe("テスト記事")
   })
 
-  it("total が data.total を返す", async () => {
+  test("total が data.total を返す", async () => {
     const { total } = await useArticles({ articleLimit: readonly(ref(10)) })
     expect(total.value).toBe(1)
   })
 
-  it("publishers が data.publishers を返す", async () => {
+  test("publishers が data.publishers を返す", async () => {
     const { publishers } = await useArticles({
       articleLimit: readonly(ref(10))
     })
     expect(publishers.value).toEqual([{ id: 1, name: "Zenn" }])
   })
 
-  it("data が null のとき articles は空配列を返す", async () => {
+  test("data が null のとき articles は空配列を返す", async () => {
     mockUseFetchFn.mockReturnValue({ data: ref(null), status: ref("idle") })
     const { articles } = await useArticles({ articleLimit: readonly(ref(10)) })
     expect(articles.value).toEqual([])
   })
 
-  it("data が null のとき total は 0 を返す", async () => {
+  test("data が null のとき total は 0 を返す", async () => {
     mockUseFetchFn.mockReturnValue({ data: ref(null), status: ref("idle") })
     const { total } = await useArticles({ articleLimit: readonly(ref(10)) })
     expect(total.value).toBe(0)
   })
 
-  it("data が null のとき publishers は空配列を返す", async () => {
+  test("data が null のとき publishers は空配列を返す", async () => {
     mockUseFetchFn.mockReturnValue({ data: ref(null), status: ref("idle") })
     const { publishers } = await useArticles({
       articleLimit: readonly(ref(10))
@@ -76,37 +76,37 @@ describe("useArticles", () => {
     expect(publishers.value).toEqual([])
   })
 
-  it("articleLimit が返り値に含まれる", async () => {
+  test("articleLimit が返り値に含まれる", async () => {
     const limit = readonly(ref(20))
     const { articleLimit } = await useArticles({ articleLimit: limit })
     expect(articleLimit.value).toBe(20)
   })
 
-  it("初期状態で page は 1 になる", async () => {
+  test("初期状態で page は 1 になる", async () => {
     const { page } = await useArticles({ articleLimit: readonly(ref(10)) })
     expect(page.value).toBe(1)
   })
 
-  it("初期状態で selectedPublisher は null になる", async () => {
+  test("初期状態で selectedPublisher は null になる", async () => {
     const { selectedPublisher } = await useArticles({
       articleLimit: readonly(ref(10))
     })
     expect(selectedPublisher.value).toBeNull()
   })
 
-  it("status が返り値に含まれる", async () => {
+  test("status が返り値に含まれる", async () => {
     const { status } = await useArticles({ articleLimit: readonly(ref(10)) })
     expect(status.value).toBe("success")
   })
 
   // ルートクエリによる初期化
-  it("route.query.page=3 のとき page が 3 で初期化される", async () => {
+  test("route.query.page=3 のとき page が 3 で初期化される", async () => {
     await useRouter().replace({ query: { page: "3" } })
     const { page } = await useArticles({ articleLimit: readonly(ref(10)) })
     expect(page.value).toBe(3)
   })
 
-  it("route.query.publisher=Zenn のとき selectedPublisher が Zenn で初期化される", async () => {
+  test("route.query.publisher=Zenn のとき selectedPublisher が Zenn で初期化される", async () => {
     await useRouter().replace({ query: { publisher: "Zenn" } })
     const { selectedPublisher } = await useArticles({
       articleLimit: readonly(ref(10))
@@ -115,7 +115,7 @@ describe("useArticles", () => {
   })
 
   // route.query → state のウォッチャー
-  it("route.query.page が変わると page が追従する", async () => {
+  test("route.query.page が変わると page が追従する", async () => {
     const router = useRouter()
     const { page } = await useArticles({ articleLimit: readonly(ref(10)) })
     expect(page.value).toBe(1)
@@ -125,7 +125,7 @@ describe("useArticles", () => {
     expect(page.value).toBe(5)
   })
 
-  it("route.query.publisher が変わると selectedPublisher が追従する", async () => {
+  test("route.query.publisher が変わると selectedPublisher が追従する", async () => {
     const router = useRouter()
     const { selectedPublisher } = await useArticles({
       articleLimit: readonly(ref(10))
@@ -138,7 +138,7 @@ describe("useArticles", () => {
   })
 
   // state → router.replace のウォッチャー
-  it("page が 2 に変わると URL クエリに page=2 が反映される", async () => {
+  test("page が 2 に変わると URL クエリに page=2 が反映される", async () => {
     const router = useRouter()
     const { page } = await useArticles({ articleLimit: readonly(ref(10)) })
 
@@ -149,7 +149,7 @@ describe("useArticles", () => {
     expect(router.currentRoute.value.query.page).toBe("2")
   })
 
-  it("page が 1 になると URL クエリから page が除去される", async () => {
+  test("page が 1 になると URL クエリから page が除去される", async () => {
     const router = useRouter()
     await router.replace({ query: { page: "3" } })
     const { page } = await useArticles({ articleLimit: readonly(ref(10)) })
@@ -162,7 +162,7 @@ describe("useArticles", () => {
     expect(router.currentRoute.value.query.page).toBeUndefined()
   })
 
-  it("selectedPublisher が変わると page が 1 にリセットされる", async () => {
+  test("selectedPublisher が変わると page が 1 にリセットされる", async () => {
     const router = useRouter()
     await router.replace({ query: { page: "3" } })
     const { page, selectedPublisher } = await useArticles({
@@ -176,7 +176,7 @@ describe("useArticles", () => {
     expect(page.value).toBe(1)
   })
 
-  it("selectedPublisher が変わると router.replace に publisher が渡される", async () => {
+  test("selectedPublisher が変わると router.replace に publisher が渡される", async () => {
     const router = useRouter()
     const replaceSpy = vi.spyOn(router, "replace")
     const { selectedPublisher } = await useArticles({
@@ -190,19 +190,19 @@ describe("useArticles", () => {
   })
 
   // useFetch のリクエストボディ
-  it("useFetch が /api/article/fetch に POST で呼ばれる", async () => {
+  test("useFetch が /api/article/fetch に POST で呼ばれる", async () => {
     await useArticles({ articleLimit: readonly(ref(10)) })
     expect(mockUseFetchFn.mock.calls[0]![0]).toBe("/api/article/fetch")
     expect(mockUseFetchFn.mock.calls[0]![1].method).toBe("POST")
   })
 
-  it("selectedPublisher なしのとき useFetch body に where 句が含まれない", async () => {
+  test("selectedPublisher なしのとき useFetch body に where 句が含まれない", async () => {
     await useArticles({ articleLimit: readonly(ref(10)) })
     const body = mockUseFetchFn.mock.calls[0]![1].body
     expect(body.value.where).toBeUndefined()
   })
 
-  it("selectedPublisher ありのとき useFetch body に publisherName の where 句が含まれる", async () => {
+  test("selectedPublisher ありのとき useFetch body に publisherName の where 句が含まれる", async () => {
     await useRouter().replace({ query: { publisher: "Zenn" } })
     await useArticles({ articleLimit: readonly(ref(10)) })
     const body = mockUseFetchFn.mock.calls[0]![1].body
@@ -211,7 +211,7 @@ describe("useArticles", () => {
     ])
   })
 
-  it("page=3・limit=10 のとき offset が 20 になる", async () => {
+  test("page=3・limit=10 のとき offset が 20 になる", async () => {
     await useRouter().replace({ query: { page: "3" } })
     await useArticles({ articleLimit: readonly(ref(10)) })
     const body = mockUseFetchFn.mock.calls[0]![1].body
