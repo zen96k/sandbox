@@ -14,7 +14,7 @@
       v-else-if="status === 'error'"
       class="py-12 text-center text-gray-500"
     >
-      エラーが発生しました
+      記事を取得できませんでした
     </div>
     <template v-else>
       <ArticlePublisherFilter
