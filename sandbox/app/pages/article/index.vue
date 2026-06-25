@@ -40,7 +40,6 @@
             v-for="article in articles"
             :key="article.id"
             :article="article"
-            :format-date="formatDate"
           />
         </UPageGrid>
         <div class="mt-8 flex justify-center">

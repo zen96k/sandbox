@@ -30,6 +30,8 @@
 </template>
 
 <script setup lang="ts">
+  import { formatDate } from "~/utils/formatDate"
+
   defineProps<{
     article: {
       id: string | number
@@ -39,6 +41,5 @@
       author: string
       publishedAt: string | Date
     }
-    formatDate: (date: string | Date) => string
   }>()
 </script>
