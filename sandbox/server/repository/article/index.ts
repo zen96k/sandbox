@@ -1,7 +1,7 @@
 import { type SQL, count, eq } from "drizzle-orm"
 import type { LibSQLDatabase } from "drizzle-orm/libsql"
-import type * as schema from "../db/schema"
-import { article, publisher } from "../db/schema"
+import type * as schema from "../../db/schema"
+import { article, publisher } from "../../db/schema"
 
 export type Article = {
   id: number

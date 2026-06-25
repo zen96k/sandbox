@@ -1,6 +1,6 @@
 import { db } from "../../db"
-import { generateArticleRepository } from "../../repository/article.repository"
-import { generateArticleService } from "../../service/article/service"
+import { generateArticleRepository } from "../../repository/article"
+import { generateArticleService } from "../../service/article"
 import { bodySchema } from "./schema/body-schema"
 
 const articleService = generateArticleService(generateArticleRepository(db))
