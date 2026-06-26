@@ -4,7 +4,7 @@ import { summarizeArticle } from "./gemini"
 import { generateArticleSummaryRepository } from "./repository"
 import { generateArticleSummaryService } from "./service"
 
-const articleLimit = 10
+const articleLimit = 20
 const delayBetweenRequestsMilliSeconds = 7_000
 
 const articleSummaryService = generateArticleSummaryService({
