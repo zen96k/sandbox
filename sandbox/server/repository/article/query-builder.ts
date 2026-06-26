@@ -2,12 +2,6 @@ import { type SQL, and, asc, desc, eq } from "drizzle-orm"
 import { article, publisher } from "../../db/schema"
 
 export type WhereCondition = { column: string; operator: "eq"; value: string }
-export type GetArticlesOption = {
-  where?: WhereCondition[]
-  orderBy?: { column: string; direction: "asc" | "desc" }[]
-  limit?: number
-  offset?: number
-}
 
 const orderableColumns = {
   publishedAt: article.publishedAt,
@@ -43,7 +37,7 @@ export const buildWhereSQL = ({
 
 export const buildOrderSQL = ({
   orderBy
-}: { orderBy?: GetArticlesOption["orderBy"] } = {}): SQL[] | undefined => {
+}: { orderBy?: { column: string; direction: "asc" | "desc" }[] } = {}): SQL[] | undefined => {
   const expressions = orderBy
     ?.filter(({ column }) => {
       return column in orderableColumns
