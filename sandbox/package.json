@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@formkit/tempo": "1.1.0",
+    "@google/genai": "2.10.0",
     "@libsql/client": "0.17.4",
     "@nuxt/ui": "4.9.0",
     "@vueuse/core": "14.3.0",
