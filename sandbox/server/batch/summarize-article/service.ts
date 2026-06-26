@@ -27,7 +27,7 @@ export const generateArticleSummaryService = ({
     },
 
     summarizeArticle: async ({ article }: { article: PendingArticle }) => {
-      await repository.markArticleSummaryStatusProcessing({
+      await repository.updateArticleSummaryStatusProcessing({
         articleId: article.id
       })
 
@@ -36,7 +36,7 @@ export const generateArticleSummaryService = ({
       const contentHash = generateContentHash({ text })
 
       if (article.summary && article.contentHash === contentHash) {
-        await repository.markArticleSummaryStatusSkipped({
+        await repository.updateArticleSummaryStatusSkipped({
           articleId: article.id
         })
         console.log(
@@ -44,7 +44,7 @@ export const generateArticleSummaryService = ({
         )
       } else {
         const summary = await summarizeArticle({ title: article.title, text })
-        await repository.markArticleSummaryStatusCompleted({
+        await repository.updateArticleSummaryStatusCompleted({
           articleId: article.id,
           contentHash,
           summary
@@ -53,14 +53,14 @@ export const generateArticleSummaryService = ({
       }
     },
 
-    markArticleSummaryStatusFailed: async ({
+    updateArticleSummaryStatusFailed: async ({
       articleId,
       error
     }: {
       articleId: number
       error: unknown
     }) => {
-      return await repository.markArticleSummaryStatusFailed({
+      return await repository.updateArticleSummaryStatusFailed({
         articleId,
         error
       })

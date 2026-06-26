@@ -47,7 +47,7 @@ export const generateArticleSummaryRepository = ({
       return await query
     },
 
-    markArticleSummaryStatusProcessing: async ({
+    updateArticleSummaryStatusProcessing: async ({
       articleId
     }: {
       articleId: number
@@ -69,7 +69,7 @@ export const generateArticleSummaryRepository = ({
         })
     },
 
-    markArticleSummaryStatusCompleted: async ({
+    updateArticleSummaryStatusCompleted: async ({
       articleId,
       contentHash,
       summary
@@ -91,7 +91,7 @@ export const generateArticleSummaryRepository = ({
         .where(eq(articleSummary.articleId, articleId))
     },
 
-    markArticleSummaryStatusSkipped: async ({
+    updateArticleSummaryStatusSkipped: async ({
       articleId
     }: {
       articleId: number
@@ -106,7 +106,7 @@ export const generateArticleSummaryRepository = ({
         .where(eq(articleSummary.articleId, articleId))
     },
 
-    markArticleSummaryStatusFailed: async ({
+    updateArticleSummaryStatusFailed: async ({
       articleId,
       error
     }: {

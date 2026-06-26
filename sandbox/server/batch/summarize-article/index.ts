@@ -30,7 +30,7 @@ for (const [index, article] of pendingArticles.entries()) {
     await articleSummaryService.summarizeArticle({ article })
   } catch (error) {
     console.error(`${article.title} の要約に失敗しました:`, error)
-    await articleSummaryService.markArticleSummaryStatusFailed({
+    await articleSummaryService.updateArticleSummaryStatusFailed({
       articleId: article.id,
       error
     })
