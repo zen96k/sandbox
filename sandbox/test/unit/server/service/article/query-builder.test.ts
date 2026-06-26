@@ -4,7 +4,7 @@ import { article, publisher } from "../../../../../server/db/schema"
 import {
   buildOrderSQL,
   buildWhereSQL
-} from "../../../../../server/service/article/query-builder"
+} from "../../../../../server/repository/article/query-builder"
 
 describe("buildWhereSQL", () => {
   test("条件が指定されていない場合はundefinedを返す", () => {

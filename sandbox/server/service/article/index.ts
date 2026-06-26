@@ -1,15 +1,9 @@
-import type { SQL } from "drizzle-orm"
 import type { Article, Publisher, ReadOption } from "../../repository/article"
-import {
-  type GetArticlesOption,
-  type WhereCondition,
-  buildOrderSQL,
-  buildWhereSQL
-} from "./query-builder"
+import type { WhereCondition } from "../../repository/article/query-builder"
 
 export type ArticleRepository = {
   readArticles(option?: ReadOption): Promise<Article[]>
-  countArticles(option?: { where?: SQL }): Promise<number>
+  countArticles(option?: { where?: WhereCondition[] }): Promise<number>
   readPublishers(): Promise<Publisher[]>
 }
 
@@ -19,26 +13,14 @@ export const generateArticleService = ({
   repository: ArticleRepository
 }) => {
   return {
-    readArticles: async ({
-      where,
-      orderBy,
-      limit,
-      offset
-    }: GetArticlesOption = {}): Promise<Article[]> => {
-      return await repository.readArticles({
-        where: buildWhereSQL({ conditions: where }),
-        orderBy: buildOrderSQL({ orderBy }),
-        limit,
-        offset
-      })
+    readArticles: async (option?: ReadOption): Promise<Article[]> => {
+      return await repository.readArticles(option)
     },
 
     countArticles: async ({
       where
     }: { where?: WhereCondition[] } = {}): Promise<number> => {
-      return await repository.countArticles({
-        where: buildWhereSQL({ conditions: where })
-      })
+      return await repository.countArticles({ where })
     },
 
     readPublishers: async (): Promise<Publisher[]> => {
