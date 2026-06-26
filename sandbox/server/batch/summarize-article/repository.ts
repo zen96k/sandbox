@@ -1,4 +1,4 @@
-import { and, desc, eq, isNull, lt, or, sql } from "drizzle-orm"
+import { and, asc, eq, isNull, lt, or, sql } from "drizzle-orm"
 import type { LibSQLDatabase } from "drizzle-orm/libsql"
 import type * as schema from "../../db/schema"
 import { article, articleSummary, articleSummaryStatus } from "../../db/schema"
@@ -37,7 +37,7 @@ export const generateArticleSummaryRepository = ({
             )
           )
         )
-        .orderBy(desc(article.publishedAt))
+        .orderBy(asc(article.publishedAt))
         .$dynamic()
 
       if (limit) {

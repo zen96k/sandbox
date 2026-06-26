@@ -1,9 +1,11 @@
+import { setTimeout as sleep } from "timers/promises"
 import { db } from "../../db"
 import { summarizeArticle } from "./gemini"
 import { generateArticleSummaryRepository } from "./repository"
 import { generateArticleSummaryService } from "./service"
 
 const articleLimit = 10
+const delayBetweenRequestsMilliSeconds = 7_000
 
 const articleSummaryService = generateArticleSummaryService({
   repository: generateArticleSummaryRepository({ db }),
@@ -20,7 +22,10 @@ if (!pendingArticles.length) {
   console.log(`${pendingArticles.length} 件の記事を要約します`)
 }
 
-for (const article of pendingArticles) {
+for (const [index, article] of pendingArticles.entries()) {
+  if (index > 0) {
+    await sleep(delayBetweenRequestsMilliSeconds)
+  }
   try {
     await articleSummaryService.summarizeArticle({ article })
   } catch (error) {
