@@ -1,0 +1,33 @@
+name: 機能要望
+description: 新機能や既存機能の改善を提案するためのテンプレート
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        新機能や改善案を記載してください。
+
+  - type: textarea
+    id: overview
+    attributes:
+      label: 概要
+      description: 追加または改善したい機能を記載してください。
+      placeholder: 例）記事一覧をキーワードで検索できるようにする
+    validations:
+      required: true
+
+  - type: textarea
+    id: purpose
+    attributes:
+      label: 目的
+      description: この機能が必要な理由や、解決したいことを記載してください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: 補足
+      description: 参考資料、画面イメージなどがあれば記載してください。
+    validations:
+      required: false
