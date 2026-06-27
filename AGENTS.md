@@ -115,13 +115,18 @@ batch/summarize-article/  (Gemini API)         フロントエンド (app/pages/
 
 記事一覧の UI は `app/components/article/ArticleCard.vue` と `app/components/article/ArticlePublisherFilter.vue` に分割されています。ページサイズは VueUse の breakpoint で desktop 15 件、mobile 10 件に切り替えます。
 
+## エージェントスキル
+
+`.agents/skills/` 配下にプロジェクト固有のスキル定義があります。
+
+- `gemini-interactions-api/`: Gemini API（Interactions API）を使ったコードを書く際に参照するスキル。モデル名、SDK の使い方、移行ガイドを含む。`summarize-article` バッチで Gemini API を呼び出す際はこのスキルを確認してください。
+
 ## テスト
 
 `test/unit/` と `test/nuxt/` 配下にあります。
 
 - `test/unit/`: API、サービス、query-builder、日付フォーマットのテスト。サービス層はリポジトリをモックするため DB は不要
 - `test/nuxt/`: Nuxt テスト環境でのコンポーネント・composable のテスト（`environment: "nuxt"`）
-- `test/e2e/`: E2E スロットは定義済みだが現時点では未使用
 
 ## CI/CD
 
