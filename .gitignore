@@ -3,3 +3,6 @@ volume
 *.env
 !default.env
 !*.default.env
+
+.credentials.json
+auth.json
