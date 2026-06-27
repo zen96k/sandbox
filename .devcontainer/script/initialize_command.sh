@@ -12,3 +12,6 @@ cd ${PROJECT_DIRNAME}
 rm -rf volume
 mkdir -p volume/.claude
 mkdir -p volume/.codex
+
+touch .credentials.json
+touch auth.json
