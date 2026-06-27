@@ -1,7 +1,4 @@
-.claude/*
-!.claude/settings.json
-
-.codex
+volume
 
 *.env
 !default.env

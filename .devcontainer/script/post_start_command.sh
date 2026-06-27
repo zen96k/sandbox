@@ -9,6 +9,6 @@ PROJECT_DIRNAME=$(cd ${SCRIPT_DIRNAME}/../.. && pwd)
 
 cd ${PROJECT_DIRNAME}
 
-git config --local init.defaultBranch ${GIT_DEFAULT_BRANCH}
-git config --local user.name ${GIT_USER_NAME}
-git config --local user.email ${GIT_USER_EMAIL}
+git config init.defaultBranch ${GIT_DEFAULT_BRANCH}
+git config user.name ${GIT_USER_NAME}
+git config user.email ${GIT_USER_EMAIL}
