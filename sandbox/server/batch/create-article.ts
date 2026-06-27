@@ -10,7 +10,7 @@ const publishers = await db.select().from(publisher)
 const allItems = (
   await Promise.all(
     publishers.map(async (publisher) => {
-      console.log(`Fetching articles from ${publisher.name}...`)
+      console.log(`${publisher.name} の記事を取得中です...`)
       const feed = await parser.parseURL(publisher.url)
       const items = feed.items.flatMap((item) => {
         const title = item.title
@@ -20,7 +20,7 @@ const allItems = (
 
         if (!title || !url || !author || !publishedAt) {
           console.warn(
-            `Skipping article from ${publisher.name} due to missing required fields: ${JSON.stringify(
+            `${publisher.name} の記事をスキップ(必須フィールドが不足)しました: ${JSON.stringify(
               item
             )}`
           )
@@ -31,7 +31,9 @@ const allItems = (
           ]
         }
       })
-      console.log(`Fetched ${items.length} articles from ${publisher.name}.`)
+      console.log(
+        `${publisher.name} から ${items.length} 件の記事を取得しました`
+      )
 
       return items
     })
