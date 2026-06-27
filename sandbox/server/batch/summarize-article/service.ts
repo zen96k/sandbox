@@ -1,23 +1,23 @@
-import type { summarizeArticle as SummarizeFn } from "./gemini"
+import type { summarizeArticle as SummarizeArticleType } from "./gemini"
 import type { generateArticleSummaryRepository } from "./repository"
 import { extractText, fetchHtml, generateContentHash } from "./scraper"
 
 const processingTimeoutSeconds = 3600
 
-export type ArticleSummaryRepository = ReturnType<
+type ArticleSummaryRepositoryType = ReturnType<
   typeof generateArticleSummaryRepository
 >
 
-type PendingArticle = Awaited<
-  ReturnType<ArticleSummaryRepository["readPendingArticles"]>
+type PendingArticleType = Awaited<
+  ReturnType<ArticleSummaryRepositoryType["readPendingArticles"]>
 >[number]
 
 export const generateArticleSummaryService = ({
   repository,
   summarizeArticle
 }: {
-  repository: ArticleSummaryRepository
-  summarizeArticle: typeof SummarizeFn
+  repository: ArticleSummaryRepositoryType
+  summarizeArticle: typeof SummarizeArticleType
 }) => {
   return {
     readPendingArticles: async ({ limit }: { limit?: number } = {}) => {
@@ -26,7 +26,7 @@ export const generateArticleSummaryService = ({
       return await repository.readPendingArticles({ timeoutAt, limit })
     },
 
-    summarizeArticle: async ({ article }: { article: PendingArticle }) => {
+    summarizeArticle: async ({ article }: { article: PendingArticleType }) => {
       await repository.updateArticleSummaryStatusProcessing({
         articleId: article.id
       })

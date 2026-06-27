@@ -9,16 +9,14 @@ export const articleSummaryStatus = {
   failed: "failed"
 } as const
 
-export const articleSummaryStatuses = [
+const articleSummaryStatuses = [
   articleSummaryStatus.pending,
   articleSummaryStatus.processing,
   articleSummaryStatus.completed,
   articleSummaryStatus.failed
 ] as const
 
-export type ArticleSummaryStatus = (typeof articleSummaryStatuses)[number]
-
-const articleSummaryStatusCheckValues = articleSummaryStatuses
+const checkArticleSummaryStatus = articleSummaryStatuses
   .map((status) => {
     return `'${status}'`
   })
@@ -55,7 +53,7 @@ export const articleSummary = sqliteTable(
     return [
       check(
         "article_summary_status_check",
-        sql`${table.status} in (${sql.raw(articleSummaryStatusCheckValues)})`
+        sql`${table.status} in (${sql.raw(checkArticleSummaryStatus)})`
       )
     ]
   }

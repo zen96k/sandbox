@@ -8,22 +8,22 @@ const orderableColumns = {
 } as const
 const filterableColumns = { publisherName: publisher.name } as const
 
-type OrderableColumn = keyof typeof orderableColumns
-type FilterableColumn = keyof typeof filterableColumns
+type OrderableColumnType = keyof typeof orderableColumns
+type FilterableColumnType = keyof typeof filterableColumns
 
-export type WhereCondition = {
-  column: FilterableColumn
+export type WhereConditionType = {
+  column: FilterableColumnType
   operator: "eq"
   value: string
 }
-export type OrderByCondition = {
-  column: OrderableColumn
+export type OrderByConditionType = {
+  column: OrderableColumnType
   direction: "asc" | "desc"
 }
 
 export const buildWhereSQL = ({
   conditions
-}: { conditions?: WhereCondition[] } = {}): SQL | undefined => {
+}: { conditions?: WhereConditionType[] } = {}): SQL | undefined => {
   const expressions = conditions?.map(({ column, operator, value }) => {
     const col = filterableColumns[column]
     switch (operator) {
@@ -41,7 +41,7 @@ export const buildWhereSQL = ({
 
 export const buildOrderSQL = ({
   orderBy
-}: { orderBy?: OrderByCondition[] } = {}): SQL[] | undefined => {
+}: { orderBy?: OrderByConditionType[] } = {}): SQL[] | undefined => {
   const expressions = orderBy
     ?.filter(({ column }) => {
       return column in orderableColumns

@@ -3,13 +3,13 @@ import type { LibSQLDatabase } from "drizzle-orm/libsql"
 import type * as schema from "../../db/schema"
 import { article, publisher } from "../../db/schema"
 import {
-  type OrderByCondition,
-  type WhereCondition,
+  type OrderByConditionType,
+  type WhereConditionType,
   buildOrderSQL,
   buildWhereSQL
 } from "./query-builder"
 
-export type Article = {
+export type ArticleType = {
   id: number
   title: string
   url: string
@@ -18,11 +18,11 @@ export type Article = {
   publisherName: string
 }
 
-export type Publisher = { id: number; name: string }
+export type PublisherType = { id: number; name: string }
 
-export type ReadOption = {
-  where?: WhereCondition[]
-  orderBy?: OrderByCondition[]
+export type ReadOptionType = {
+  where?: WhereConditionType[]
+  orderBy?: OrderByConditionType[]
   limit?: number
   offset?: number
 }
@@ -38,7 +38,7 @@ export const generateArticleRepository = ({
       orderBy,
       limit,
       offset
-    }: ReadOption = {}): Promise<Article[]> => {
+    }: ReadOptionType = {}): Promise<ArticleType[]> => {
       let query = db
         .select({
           id: article.id,
@@ -71,7 +71,7 @@ export const generateArticleRepository = ({
       return await query
     },
 
-    countArticles: async ({ where }: ReadOption = {}): Promise<number> => {
+    countArticles: async ({ where }: ReadOptionType = {}): Promise<number> => {
       let query = db
         .select({ count: count() })
         .from(article)
@@ -88,7 +88,7 @@ export const generateArticleRepository = ({
       return total
     },
 
-    readPublishers: async (): Promise<Publisher[]> => {
+    readPublishers: async (): Promise<PublisherType[]> => {
       return await db
         .selectDistinct({ id: publisher.id, name: publisher.name })
         .from(article)

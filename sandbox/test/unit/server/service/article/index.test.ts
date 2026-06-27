@@ -1,9 +1,9 @@
 import { describe, expect, test, vi } from "vitest"
-import type { Publisher } from "../../../../../server/repository/article"
+import type { PublisherType } from "../../../../../server/repository/article"
 import { generateArticleService } from "../../../../../server/service/article"
 
 describe("generateArticleService", () => {
-  const publishers: Publisher[] = [{ id: 1, name: "Example Publisher" }]
+  const publishers: PublisherType[] = [{ id: 1, name: "Example Publisher" }]
 
   test("limitとoffsetをリポジトリに渡す", async () => {
     const repository = {
