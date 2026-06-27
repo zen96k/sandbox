@@ -10,6 +10,6 @@ PROJECT_DIRNAME=$(cd ${SCRIPT_DIRNAME}/../.. && pwd)
 cd ${PROJECT_DIRNAME}
 
 cp -rfv .zshrc ${HOME}/.zshrc
-curl -fsSL https://claude.ai/install.sh | bash
-curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh
 mise use -g node
+npm install -g @anthropic-ai/claude-code
+npm install -g @openai/codex
