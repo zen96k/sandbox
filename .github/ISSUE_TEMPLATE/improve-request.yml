@@ -1,0 +1,41 @@
+name: 改善提案
+description: 使用中に気づいたコード品質・設計・DX などの改善を提案するためのテンプレート
+title: "[Improve]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        使用中に気づいた改善点を記載してください。
+
+  - type: textarea
+    id: overview
+    attributes:
+      label: 概要
+      description: 何を改善したいかを記載してください。
+      placeholder: 例）APIのlimitパラメータに上限がないため、大量取得によるDB負荷が生じる可能性がある
+    validations:
+      required: true
+
+  - type: textarea
+    id: background
+    attributes:
+      label: 気づいた経緯
+      description: どのような作業中に気づいたか、再現手順や該当箇所があれば記載してください。
+    validations:
+      required: false
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 改善案
+      description: 具体的な対応方針や実装イメージがあれば記載してください。
+    validations:
+      required: false
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: 補足
+      description: 参考資料、関連Issue、影響範囲などがあれば記載してください。
+    validations:
+      required: false
