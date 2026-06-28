@@ -19,7 +19,7 @@ body:
   - type: textarea
     id: background
     attributes:
-      label: 気づいた経緯
+      label: 経緯
       description: どのような作業中に気づいたか、再現手順や該当箇所があれば記載してください。
     validations:
       required: false
