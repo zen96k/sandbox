@@ -40,8 +40,9 @@ npm run test:watch
 # 特定のテストファイルのみ実行
 npx vitest run test/unit/server/service/article/index.test.ts
 
-# unit / nuxt プロジェクトのみ実行
+# unit / e2e / nuxt プロジェクトのみ実行
 npx vitest run --project unit
+npx vitest run --project e2e
 npx vitest run --project nuxt
 
 # lint
@@ -123,9 +124,10 @@ batch/summarize-article/  (Gemini API)         フロントエンド (app/pages/
 
 ## テスト
 
-`test/unit/` と `test/nuxt/` 配下にあります。
+`test/unit/`、`test/e2e/`、`test/nuxt/` 配下にあります。
 
 - `test/unit/`: API、サービス、query-builder、日付フォーマットのテスト。サービス層はリポジトリをモックするため DB は不要
+- `test/e2e/`: Playwright を使ったブラウザ E2E テスト。開発サーバーが起動している状態で実行する
 - `test/nuxt/`: Nuxt テスト環境でのコンポーネント・composable のテスト（`environment: "nuxt"`）
 
 ## CI/CD
