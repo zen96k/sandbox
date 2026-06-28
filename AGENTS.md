@@ -1,150 +1,60 @@
 # AGENTS.md
 
-このファイルは、このリポジトリで作業する AI コーディングエージェント向けのガイドです。
-
-## コーディングルール
-
-- 関数はアロー関数で書く（`function` キーワードは使わない）
-- 関数の引数はオブジェクト引数を使う（位置引数は使わない）
-
-## プロジェクト構成
-
-アプリケーションのコードはすべて `sandbox/` 配下にあります。以下のコマンドは `sandbox/` を作業ディレクトリとして想定しています。
-
-Node.js のバージョンは `mise.toml` で管理しており、現在は Node.js 24.16.0 を使用します。
-
-## コマンド
-
-```bash
-# 依存関係のインストール
-npm install
-
-# 開発サーバー起動 (http://localhost:3000)
-npm run dev
-
-# 本番ビルド
-npm run build
-
-# 静的サイト生成
-npm run generate
-
-# 本番ビルドのローカルプレビュー
-npm run preview
-
-# テスト全件実行
-npm test
-
-# テストの watch 実行
-npm run test:watch
-
-# 特定のテストファイルのみ実行
-npx vitest run test/unit/server/service/article/index.test.ts
-
-# unit / e2e / nuxt プロジェクトのみ実行
-npx vitest run --project unit
-npx vitest run --project e2e
-npx vitest run --project nuxt
-
-# lint
-npx eslint .
-
-# フォーマット
-npx prettier --write .
-
-# DBマイグレーション（未適用のマイグレーションを適用）
-npx drizzle-kit migrate
-
-# スキーマ変更後にマイグレーションファイルを生成
-npx drizzle-kit generate
-
-# publisherのシードデータ投入
-npx tsx server/db/seed/index.ts
-
-# RSSフィードから記事を取得してupsert（CIで1日2回実行）
-npx tsx server/batch/create-article.ts
-
-# 記事を要約してDBに保存（手動実行）
-npx tsx server/batch/summarize-article/index.ts
-```
-
-## 環境変数
-
-`default.env` を `.env` にコピーし、`DB_FILE_NAME` を設定してください。
-
-```bash
-cp default.env .env
-```
-
-- ローカル SQLite: `DB_FILE_NAME=file:sqlite.db`
-- Turso: 認証情報を含む `libsql://` URL
-- `GEMINI_API_KEY`: 記事要約バッチ（`summarize-article`）で Gemini API を呼び出すために必要
-
-`.env` や認証トークンなどの秘密情報はコミットしたり、ドキュメント・ログ・テストコードへ転記したりしないでください。
+このリポジトリで作業するAIコーディングエージェント向けのガイド
 
 ## アーキテクチャ
 
-Nuxt 4 + Nitro アプリです。UI は Nuxt UI と Tailwind CSS v4 を使います。Vercel にデプロイされ、DB は SQLite（ローカル）/ Turso（本番）を Drizzle ORM 経由で利用します。
+Nuxt 4 + Nitro アプリ
+Nuxt UI と Tailwind CSS v4 を使用
+Vercel にデプロイされ、DB は SQLite/Turso を Drizzle ORM 経由で使用
 
-### データフロー
+## プロジェクト構成
 
-```text
-RSSフィード -> batch/create-article.ts -> SQLite/Turso
-                                              |
-                              +--------------+---------------+
-                              |                              |
-                              v                              v
-batch/summarize-article/  (Gemini API)         フロントエンド (app/pages/)
--> articleSummary テーブル更新                  -> POST /api/article/fetch
-                                               -> articleService -> articleRepository -> DB
+```
+/
+├── .github/workflows/      # CI/CD(テスト・デプロイ・バッチ実行)
+├── docs/                   # エージェント向けドキュメント
+├── AGENTS.md
+└── sandbox/                # アプリケーションコード
+    ├── app/
+    │   ├── app.vue        # ルートコンポーネント
+    │   ├── assets/        # CSS・画像などの静的アセット
+    │   ├── layouts/       # Nuxt.jsのレイアウト
+    │   ├── pages/         # Nuxt.jsの画面
+    │   ├── components/    # Nuxt.jsのコンポーネント
+    │   ├── composables/   # Nuxt.jsのComposable
+    │   └── utils/         # ユーティリティ関数
+    ├── server/
+    │   ├── api/           # コントローラー
+    │   ├── repository/    # リポジトリ
+    │   ├── service/       # サービス
+    │   ├── db/            # DBスキーマ・DBシード
+    │   └── batch/         # バッチ処理
+    ├── test/
+    │   ├── unit/          # 単体テスト
+    │   ├── e2e/           # E2Eテスト
+    │   └── nuxt/          # Nuxt.js環境での結合テスト
+    ├── drizzle/            # マイグレーション
+    ├── public/             # 静的ファイル(favicon等)
+    ├── default.env         # 環境変数テンプレート
+    ├── drizzle.config.ts   # Drizzleの設定
+    ├── mise.toml           # バージョン管理
+    ├── nuxt.config.ts      # Nuxt.jsの設定
+    └── vitest.config.ts    # Vitestの設定
 ```
 
-### サーバー層 (`server/`)
+## コーディングルール
 
-- `db/index.ts`: `DB_FILE_NAME` を使って Drizzle の libSQL 接続を初期化する
-- `db/schema/`: Drizzle のテーブル定義（`publisher`、`article`、`articleSummary`）とリレーション
-- `repository/article/index.ts`: 生の DB クエリ。`generateArticleRepository({ db })` で生成するファクトリ関数パターン
-- `repository/article/query-builder.ts`: JSON のフィルター・ソート条件を Drizzle の `SQL` フラグメントに変換する。フィルターは `publisherName`、ソートは `publishedAt` / `title` / `author` のホワイトリストで制限する
-- `service/article/index.ts`: 薄いオーケストレーション層。`generateArticleService({ repository })` で生成し、`ArticleRepository` インターフェースに依存するためテスト時に差し替え可能
-- `api/article/schema/request-body-schema.ts`: `where` / `orderBy` / `limit` / `offset` を検証する Zod スキーマ
-- `api/article/fetch.post.ts`: `readValidatedBody` でリクエストを検証し、記事・件数・publisher を並列取得して `{ articles, total, publishers }` を返す。サービス層の失敗は HTTP 500 に変換する
-- `batch/create-article.ts`: 全 publisher の RSS フィードを取得して記事を upsert するスクリプト
-- `batch/summarize-article/`: Gemini API（gemini-2.5-flash）で記事本文を要約するバッチ。`index.ts` がエントリーポイントで、`service.ts` / `repository.ts` / `gemini.ts` / `scraper.ts` に分割されている。未要約・失敗・タイムアウトした記事を最大 20 件処理し、本文ハッシュが変わっていない場合はスキップする
+- 関数はアロー関数で書く(`function` キーワードは使わない)
+- 関数の引数はオブジェクト引数を使う(位置引数は使わない)
+- バックエンドでは コントローラー/サービス/リポジトリ に責務を分離する
 
-### フロントエンド (`app/`)
+## 作業ルール
 
-`app/pages/index.vue` は `/article` へリダイレクトします。記事一覧は `app/pages/article/index.vue` で表示し、`app/composables/useArticles.ts` が `useFetch` で `POST /api/article/fetch` を呼び出します。publisher フィルターとページネーションは URL クエリストリングと同期します。
-
-記事一覧の UI は `app/components/article/ArticleCard.vue` と `app/components/article/ArticlePublisherFilter.vue` に分割されています。ページサイズは VueUse の breakpoint で desktop 15 件、mobile 10 件に切り替えます。
-
-## エージェントスキル
-
-`.agents/skills/` 配下にプロジェクト固有のスキル定義があります。
-
-- `gemini-interactions-api/`: Gemini API（Interactions API）を使ったコードを書く際に参照するスキル。モデル名、SDK の使い方、移行ガイドを含む。`summarize-article` バッチで Gemini API を呼び出す際はこのスキルを確認してください。
-
-## テスト
-
-`test/unit/`、`test/e2e/`、`test/nuxt/` 配下にあります。
-
-- `test/unit/`: API、サービス、query-builder、日付フォーマットのテスト。サービス層はリポジトリをモックするため DB は不要
-- `test/e2e/`: Playwright を使ったブラウザ E2E テスト。開発サーバーが起動している状態で実行する
-- `test/nuxt/`: Nuxt テスト環境でのコンポーネント・composable のテスト（`environment: "nuxt"`）
-
-## CI/CD
-
-- CI は Node.js バージョン管理に mise を使い、依存関係を `npm clean-install` でインストールする
-- テスト: `sandbox/**` または `.github/workflows/test-application.yml` への pull request / `main` push / 手動実行で `npm run test` を実行
-- デプロイ: `sandbox/**` または `.github/workflows/deploy-application.yml` への `main` push / 手動実行で DB マイグレーション後に Vercel へデプロイ
-- 本番デプロイ時のみ `.github/workflows/deploy-application.yml` の `vercel build --prod` で `NITRO_PRESET=vercel` を指定する。`nuxt.config.ts` には常時適用の `nitro.preset` を置かない
-- 記事取得: GitHub Actions の cron が 1 日 2 回（JST 06:00 / 18:00）`create-article.ts` を本番 DB に対して実行
-- DB シードと DB マイグレーションは手動実行用 workflow も用意されている
-
-## 作業上の注意
-
-- 既存の設計に合わせ、サーバー層では repository / service / query-builder の責務分離を維持してください。
-- DB スキーマ変更時は Drizzle のマイグレーションを生成し、関連テストを更新してください。
-- フロントエンドの状態は URL クエリと同期する既存方針に合わせてください。
-- API の入力項目を変更する場合は Zod スキーマ、サービスの型、composable、関連テストを同時に更新してください。
-- ユーザーや他エージェントの未コミット変更を勝手に戻さないでください。
-- AI コーディングエージェントがコミットを作成する場合は、コミットメッセージを日本語で書いてください。
-- AI コーディングエージェントがコミットを作成する場合は、コミットメッセージ末尾に利用したエージェント名とメールアドレスの `Co-authored-by` trailer を付けてください。
+- 秘密情報はドキュメント・ログ・コードに転記しない
+- 秘密情報はコミットしない
+- ユーザーや他エージェントの未コミット変更を勝手に戻さない
+- コミットメッセージは日本語で書く
+- コミットメッセージはプレフィックスを付与する
+- コミットメッセージ末尾に利用したエージェント名とメールアドレスの `Co-authored-by` trailer を付ける
+- コミット前にPrettierとESLintを実行して整形する
