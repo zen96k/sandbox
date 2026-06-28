@@ -81,7 +81,7 @@ describe("記事一覧 - ブラウザ履歴", () => {
     await page.goForward()
     await page.waitForURL(/page=3/)
     expect(page.url()).toContain("page=3")
-  }, 30000)
+  })
 
   test("配信元フィルターが履歴に積まれる", async () => {
     page = await createMockedPage()
@@ -122,5 +122,5 @@ describe("記事一覧 - ブラウザ履歴", () => {
     expect(
       await page.getByRole("heading", { name: "記事一覧" }).isVisible()
     ).toBe(true)
-  }, 15000)
+  })
 })
