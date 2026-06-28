@@ -11,3 +11,5 @@ cd ${PROJECT_DIRNAME}/sandbox
 
 mise install
 mise exec -- npm install
+mise exec -- npx playwright install-deps
+mise exec -- npx playwright-core install chromium
