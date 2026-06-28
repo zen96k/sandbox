@@ -3,9 +3,16 @@ import withNuxt from "./.nuxt/eslint.config.mjs"
 
 const config = withNuxt([
   {
-    languageOptions: { parserOptions: { projectService: true } },
+    files: ["**/*.ts", "**/*.vue"],
+    languageOptions: {
+      parserOptions: {
+        projectService: { allowDefaultProject: ["drizzle.config.ts"] }
+      }
+    },
+    rules: { "@typescript-eslint/return-await": ["error", "always"] }
+  },
+  {
     rules: {
-      "@typescript-eslint/return-await": ["error", "always"],
       "arrow-body-style": ["error", "always"],
       curly: "error",
       "vue/attributes-order": ["error", { alphabetical: true }]
