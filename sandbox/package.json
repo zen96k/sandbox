@@ -12,10 +12,10 @@
   },
   "dependencies": {
     "@formkit/tempo": "1.1.0",
-    "@google/genai": "2.10.0",
     "@libsql/client": "0.17.4",
     "@mozilla/readability": "0.6.0",
     "@nuxt/ui": "4.9.0",
+    "@openrouter/sdk": "0.13.21",
     "@vueuse/core": "14.3.0",
     "dotenv": "17.4.2",
     "drizzle-orm": "0.45.2",

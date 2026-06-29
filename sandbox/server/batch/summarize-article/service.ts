@@ -1,4 +1,4 @@
-import type { summarizeArticle as SummarizeArticleType } from "./gemini"
+import type { summarizeArticle as SummarizeArticleType } from "./openrouter"
 import type { generateArticleSummaryRepository } from "./repository"
 import { extractText, fetchHtml, generateContentHash } from "./scraper"
 
