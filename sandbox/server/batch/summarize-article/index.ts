@@ -1,11 +1,11 @@
 import { setTimeout as sleep } from "timers/promises"
 import { db } from "../../db"
-import { summarizeArticle } from "./gemini"
+import { summarizeArticle } from "./openrouter"
 import { generateArticleSummaryRepository } from "./repository"
 import { generateArticleSummaryService } from "./service"
 
-const articleLimit = 20
-const delayBetweenRequestsMilliSeconds = 7_000
+const articleLimit = 50
+const delayBetweenRequestsMilliSeconds = 5_000
 
 const articleSummaryService = generateArticleSummaryService({
   repository: generateArticleSummaryRepository({ db }),
