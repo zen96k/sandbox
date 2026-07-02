@@ -16,6 +16,7 @@
   "remote.autoForwardPorts": false,
   "terminal.integrated.defaultProfile.linux": "zsh",
   "terminal.integrated.fontSize": 14,
+  "terminal.integrated.gpuAcceleration": "off",
   "workbench.colorTheme": "Dark Modern",
   "workbench.iconTheme": "vscode-icons",
   "workbench.secondarySideBar.showLabels": false,

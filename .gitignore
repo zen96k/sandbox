@@ -1,5 +1,4 @@
 volume
 
 *.env
-!default.env
-!*.default.env
+!.env.example

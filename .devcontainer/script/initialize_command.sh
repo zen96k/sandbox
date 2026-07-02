@@ -10,4 +10,5 @@ PROJECT_DIRNAME=$(cd ${SCRIPT_DIRNAME}/../.. && pwd)
 cd ${PROJECT_DIRNAME}
 
 mkdir -p volume/.claude
+touch volume/.claude.json
 mkdir -p volume/.codex
