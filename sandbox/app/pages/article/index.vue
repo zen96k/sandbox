@@ -55,8 +55,6 @@
 </template>
 
 <script setup lang="ts">
-  import { breakpointsTailwind } from "@vueuse/core"
-
   const requestUrl = useRequestURL()
 
   useSeoMeta({
@@ -70,11 +68,7 @@
     twitterCard: "summary_large_image"
   })
 
-  const breakpoints = useBreakpoints(breakpointsTailwind, { ssrWidth: 768 })
-  const isDesktop = breakpoints.greaterOrEqual("lg")
-  const articleLimit = computed(() => {
-    return isDesktop.value ? 15 : 10
-  })
+  const articleLimit = 15
 
   const { selectedPublisher, page, total, articles, publishers, status } =
     await useArticles({ articleLimit })

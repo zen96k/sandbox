@@ -1,9 +1,7 @@
-import type { Ref } from "vue"
-
 export const useArticles = async ({
   articleLimit
 }: {
-  articleLimit: Readonly<Ref<number>>
+  articleLimit: number
 }) => {
   const route = useRoute()
   const router = useRouter()
@@ -50,8 +48,8 @@ export const useArticles = async ({
     body: computed(() => {
       return {
         publisherId: selectedPublisher.value ?? undefined,
-        limit: articleLimit.value,
-        offset: (page.value - 1) * articleLimit.value
+        limit: articleLimit,
+        offset: (page.value - 1) * articleLimit
       }
     })
   })
