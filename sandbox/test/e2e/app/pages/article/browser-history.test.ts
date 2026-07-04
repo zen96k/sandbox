@@ -5,8 +5,7 @@ import { afterEach, describe, expect, test } from "vitest"
 
 await setup({
   rootDir: fileURLToPath(new URL("../../../../..", import.meta.url)),
-  browser: true,
-  dev: true
+  browser: true
 })
 
 // desktop (limit=15) で3ページ分確保するため 46 件
