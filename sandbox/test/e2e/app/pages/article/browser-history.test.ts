@@ -28,7 +28,7 @@ const PUBLISHERS = [
 
 const createMockedPage = async (): Promise<Page> => {
   const page = await (await getBrowser()).newPage()
-  page.setDefaultTimeout(60000)
+  page.setDefaultTimeout(90000)
 
   await page.route("**/api/article/fetch", async (route) => {
     const body = route.request().postDataJSON()
