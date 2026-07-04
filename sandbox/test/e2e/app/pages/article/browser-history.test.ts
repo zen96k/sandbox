@@ -1,4 +1,4 @@
-import { getBrowser, setup, url } from "@nuxt/test-utils/e2e"
+import { getBrowser, setup, url, waitForHydration } from "@nuxt/test-utils/e2e"
 import { fileURLToPath } from "node:url"
 import type { Page } from "playwright-core"
 import { afterEach, describe, expect, test } from "vitest"
@@ -61,7 +61,7 @@ describe("記事一覧 - ブラウザ履歴", () => {
   test("ページ送りが履歴に積まれる", async () => {
     page = await createMockedPage()
     await page.goto(url("/article"))
-    await page.waitForLoadState("networkidle")
+    await waitForHydration(page, url("/article"), "hydration")
 
     await page.locator('[aria-label="Page 2"]').first().click()
     await page.waitForURL(/page=2/)
@@ -81,7 +81,7 @@ describe("記事一覧 - ブラウザ履歴", () => {
   test("配信元フィルターが履歴に積まれる", async () => {
     page = await createMockedPage()
     await page.goto(url("/article"))
-    await page.waitForLoadState("networkidle")
+    await waitForHydration(page, url("/article"), "hydration")
 
     await page.getByRole("button", { name: "Zenn" }).click()
     await page.waitForURL(/publisher=2/)
@@ -96,7 +96,7 @@ describe("記事一覧 - ブラウザ履歴", () => {
   test("配信元切り替え時にページが 1 にリセットされる", async () => {
     page = await createMockedPage()
     await page.goto(url("/article?page=3"))
-    await page.waitForLoadState("networkidle")
+    await waitForHydration(page, url("/article?page=3"), "hydration")
 
     await page.getByRole("button", { name: "Zenn" }).click()
     await page.waitForURL(/publisher=2/)
