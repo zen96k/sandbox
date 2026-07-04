@@ -1,12 +1,12 @@
 import { type SQL, and, asc, desc, eq } from "drizzle-orm"
-import { article, publisher } from "../../db/schema"
+import { article } from "../../db/schema"
 
 const orderableColumns = {
   publishedAt: article.publishedAt,
   title: article.title,
   author: article.author
 } as const
-const filterableColumns = { publisherName: publisher.name } as const
+const filterableColumns = { publisherId: article.publisherId } as const
 
 type OrderableColumnType = keyof typeof orderableColumns
 type FilterableColumnType = keyof typeof filterableColumns
@@ -14,7 +14,7 @@ type FilterableColumnType = keyof typeof filterableColumns
 export type WhereConditionType = {
   column: FilterableColumnType
   operator: "eq"
-  value: string
+  value: number
 }
 export type OrderByConditionType = {
   column: OrderableColumnType

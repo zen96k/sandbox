@@ -20,6 +20,21 @@ describe("generateArticleService", () => {
     )
   })
 
+  test("publisherIdをそのままリポジトリに渡す", async () => {
+    const repository = {
+      readArticles: vi.fn().mockResolvedValue([]),
+      countArticles: vi.fn(),
+      readPublishers: vi.fn()
+    }
+    const service = generateArticleService({ repository })
+
+    await service.readArticles({ publisherId: 1 })
+
+    expect(repository.readArticles).toHaveBeenCalledWith(
+      expect.objectContaining({ publisherId: 1 })
+    )
+  })
+
   test("countArticlesをリポジトリに委譲して件数を返す", async () => {
     const repository = {
       readArticles: vi.fn(),

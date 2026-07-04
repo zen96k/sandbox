@@ -38,7 +38,26 @@ export const summarizeArticle = async ({
     chatRequest: {
       model: openrouterModel,
       messages: [{ role: "user", content: prompt }],
-      responseFormat: { type: "json_object" }
+      responseFormat: {
+        type: "json_schema",
+        jsonSchema: {
+          name: "article_summary",
+          strict: true,
+          schema: {
+            type: "object",
+            properties: {
+              summary: {
+                type: "array",
+                items: { type: "string" },
+                minItems: 4,
+                maxItems: 4
+              }
+            },
+            required: ["summary"],
+            additionalProperties: false
+          }
+        }
+      }
     }
   })
 

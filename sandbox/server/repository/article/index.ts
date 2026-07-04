@@ -3,7 +3,6 @@ import type { LibSQLDatabase } from "drizzle-orm/libsql"
 import type * as schema from "../../db/schema"
 import { article, publisher } from "../../db/schema"
 import {
-  type OrderByConditionType,
   type WhereConditionType,
   buildOrderSQL,
   buildWhereSQL
@@ -20,11 +19,20 @@ export type ArticleType = {
 
 export type PublisherType = { id: number; name: string }
 
-export type ReadOptionType = {
-  where?: WhereConditionType[]
-  orderBy?: OrderByConditionType[]
+export type ArticleQueryOptionType = {
+  publisherId?: number
   limit?: number
   offset?: number
+}
+
+const buildWhereConditions = ({
+  publisherId
+}: {
+  publisherId?: number
+}): WhereConditionType[] | undefined => {
+  return publisherId
+    ? [{ column: "publisherId", operator: "eq", value: publisherId }]
+    : undefined
 }
 
 export const generateArticleRepository = ({
@@ -34,11 +42,10 @@ export const generateArticleRepository = ({
 }) => {
   return {
     readArticles: async ({
-      where,
-      orderBy,
+      publisherId,
       limit,
       offset
-    }: ReadOptionType = {}): Promise<ArticleType[]> => {
+    }: ArticleQueryOptionType = {}): Promise<ArticleType[]> => {
       let query = db
         .select({
           id: article.id,
@@ -52,8 +59,12 @@ export const generateArticleRepository = ({
         .innerJoin(publisher, eq(article.publisherId, publisher.id))
         .$dynamic()
 
-      const whereSQL = buildWhereSQL({ conditions: where })
-      const orderSQL = buildOrderSQL({ orderBy })
+      const whereSQL = buildWhereSQL({
+        conditions: buildWhereConditions({ publisherId })
+      })
+      const orderSQL = buildOrderSQL({
+        orderBy: [{ column: "publishedAt", direction: "desc" }]
+      })
 
       if (whereSQL) {
         query = query.where(whereSQL)
@@ -71,14 +82,18 @@ export const generateArticleRepository = ({
       return await query
     },
 
-    countArticles: async ({ where }: ReadOptionType = {}): Promise<number> => {
+    countArticles: async ({
+      publisherId
+    }: Pick<ArticleQueryOptionType, "publisherId"> = {}): Promise<number> => {
       let query = db
         .select({ count: count() })
         .from(article)
         .innerJoin(publisher, eq(article.publisherId, publisher.id))
         .$dynamic()
 
-      const whereSQL = buildWhereSQL({ conditions: where })
+      const whereSQL = buildWhereSQL({
+        conditions: buildWhereConditions({ publisherId })
+      })
       if (whereSQL) {
         query = query.where(whereSQL)
       }

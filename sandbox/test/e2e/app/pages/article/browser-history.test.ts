@@ -14,7 +14,7 @@ const ARTICLES = Array.from({ length: 46 }, (_, i) => {
   return {
     id: i + 1,
     title: `記事 ${i + 1}`,
-    publisherName: i % 2 === 0 ? "Zenn" : "Qiita",
+    publisherId: i % 2 === 0 ? 2 : 1,
     url: `https://example.com/${i + 1}`,
     author: "author",
     publishedAt: "2026-01-01",
@@ -32,15 +32,10 @@ const createMockedPage = async (): Promise<Page> => {
 
   await page.route("**/api/article/fetch", async (route) => {
     const body = route.request().postDataJSON()
-    const { where, offset = 0, limit = 10 } = body
-    const publisherFilter = (
-      where as { column: string; value: string }[] | undefined
-    )?.find((w) => {
-      return w.column === "publisherName"
-    })
-    const filtered = publisherFilter
+    const { publisherId, offset = 0, limit = 10 } = body
+    const filtered = publisherId
       ? ARTICLES.filter((a) => {
-          return a.publisherName === publisherFilter.value
+          return a.publisherId === publisherId
         })
       : ARTICLES
     await route.fulfill({
@@ -89,7 +84,7 @@ describe("記事一覧 - ブラウザ履歴", () => {
     await page.waitForLoadState("networkidle")
 
     await page.getByRole("button", { name: "Zenn" }).click()
-    await page.waitForURL(/publisher=Zenn/)
+    await page.waitForURL(/publisher=2/)
 
     await page.goBack()
     await page.waitForURL((u) => {
@@ -104,7 +99,7 @@ describe("記事一覧 - ブラウザ履歴", () => {
     await page.waitForLoadState("networkidle")
 
     await page.getByRole("button", { name: "Zenn" }).click()
-    await page.waitForURL(/publisher=Zenn/)
+    await page.waitForURL(/publisher=2/)
     expect(page.url()).not.toContain("page=")
 
     await page.goBack()
@@ -114,11 +109,11 @@ describe("記事一覧 - ブラウザ履歴", () => {
 
   test("URL直接アクセスが正しく表示される", async () => {
     page = await createMockedPage()
-    await page.goto(url("/article?page=2&publisher=Zenn"))
+    await page.goto(url("/article?page=2&publisher=2"))
     await page.waitForLoadState("networkidle")
 
     expect(page.url()).toContain("page=2")
-    expect(page.url()).toContain("publisher=Zenn")
+    expect(page.url()).toContain("publisher=2")
     expect(
       await page.getByRole("heading", { name: "記事一覧" }).isVisible()
     ).toBe(true)
