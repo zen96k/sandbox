@@ -24,6 +24,8 @@ jobs:
         working-directory: sandbox
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.ref }}
       - uses: jdx/mise-action@v2
         with:
           working_directory: sandbox
