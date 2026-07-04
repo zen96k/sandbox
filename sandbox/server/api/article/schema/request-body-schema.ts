@@ -4,9 +4,9 @@ export const requestBodySchema = z.object({
   where: z
     .array(
       z.object({
-        column: z.enum(["publisherName"]),
+        column: z.enum(["publisherId"]),
         operator: z.literal("eq"),
-        value: z.string()
+        value: z.number()
       })
     )
     .optional(),

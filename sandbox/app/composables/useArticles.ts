@@ -36,9 +36,10 @@ export const useArticles = async ({
 
   const selectedPublisher = computed({
     get: () => {
-      return (route.query.publisher as string) || null
+      const value = Number(route.query.publisher)
+      return route.query.publisher && !Number.isNaN(value) ? value : null
     },
-    set: (value: string | null) => {
+    set: (value: number | null) => {
       _page.value = 1
       router.push({ query: { publisher: value ?? undefined } })
     }
@@ -52,7 +53,7 @@ export const useArticles = async ({
         where: selectedPublisher.value
           ? [
               {
-                column: "publisherName",
+                column: "publisherId",
                 operator: "eq",
                 value: selectedPublisher.value
               }

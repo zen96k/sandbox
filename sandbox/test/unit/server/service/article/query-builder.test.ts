@@ -1,6 +1,6 @@
 import { asc, desc, eq } from "drizzle-orm"
 import { describe, expect, test } from "vitest"
-import { article, publisher } from "../../../../../server/db/schema"
+import { article } from "../../../../../server/db/schema"
 import {
   buildOrderSQL,
   buildWhereSQL
@@ -17,13 +17,10 @@ describe("buildWhereSQL", () => {
 
   test("サポートされているカラムのeq式を生成する", () => {
     const result = buildWhereSQL({
-      conditions: [
-        { column: "publisherName", operator: "eq", value: "Example Publisher" }
-      ]
+      conditions: [{ column: "publisherId", operator: "eq", value: 1 }]
     })
-    expect(result).toEqual(eq(publisher.name, "Example Publisher"))
+    expect(result).toEqual(eq(article.publisherId, 1))
   })
-
 })
 
 describe("buildOrderSQL", () => {
@@ -53,5 +50,4 @@ describe("buildOrderSQL", () => {
       })
     ).toEqual([desc(article.publishedAt), asc(article.title)])
   })
-
 })

@@ -100,12 +100,12 @@ describe("useArticles", () => {
     expect(page.value).toBe(3)
   })
 
-  test("route.query.publisher=Zenn のとき selectedPublisher が Zenn で初期化される", async () => {
-    await useRouter().replace({ query: { publisher: "Zenn" } })
+  test("route.query.publisher=1 のとき selectedPublisher が 1 で初期化される", async () => {
+    await useRouter().replace({ query: { publisher: "1" } })
     const { selectedPublisher } = await useArticles({
       articleLimit: readonly(ref(10))
     })
-    expect(selectedPublisher.value).toBe("Zenn")
+    expect(selectedPublisher.value).toBe(1)
   })
 
   // route.query → state のウォッチャー
@@ -126,9 +126,9 @@ describe("useArticles", () => {
     })
     expect(selectedPublisher.value).toBeNull()
 
-    await router.push({ query: { publisher: "Qiita" } })
+    await router.push({ query: { publisher: "2" } })
     await nextTick()
-    expect(selectedPublisher.value).toBe("Qiita")
+    expect(selectedPublisher.value).toBe(2)
   })
 
   // state → router.replace のウォッチャー
@@ -164,7 +164,7 @@ describe("useArticles", () => {
     })
     expect(page.value).toBe(3)
 
-    selectedPublisher.value = "Zenn"
+    selectedPublisher.value = 1
     await nextTick()
 
     expect(page.value).toBe(1)
@@ -177,10 +177,10 @@ describe("useArticles", () => {
       articleLimit: readonly(ref(10))
     })
 
-    selectedPublisher.value = "Zenn"
+    selectedPublisher.value = 1
     await nextTick()
 
-    expect(pushSpy).toHaveBeenCalledWith({ query: { publisher: "Zenn" } })
+    expect(pushSpy).toHaveBeenCalledWith({ query: { publisher: 1 } })
   })
 
   // useFetch のリクエストボディ
@@ -196,12 +196,12 @@ describe("useArticles", () => {
     expect(body.value.where).toBeUndefined()
   })
 
-  test("selectedPublisher ありのとき useFetch body に publisherName の where 句が含まれる", async () => {
-    await useRouter().replace({ query: { publisher: "Zenn" } })
+  test("selectedPublisher ありのとき useFetch body に publisherId の where 句が含まれる", async () => {
+    await useRouter().replace({ query: { publisher: "1" } })
     await useArticles({ articleLimit: readonly(ref(10)) })
     const body = mockUseFetchFn.mock.calls[0]![1].body
     expect(body.value.where).toEqual([
-      { column: "publisherName", operator: "eq", value: "Zenn" }
+      { column: "publisherId", operator: "eq", value: 1 }
     ])
   })
 

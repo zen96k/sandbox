@@ -11,7 +11,7 @@ describe("requestBodySchema", () => {
   test("有効なボディを受け入れる", () => {
     expect(() => {
       return requestBodySchema.parse({
-        where: [{ column: "publisherName", operator: "eq", value: "Zenn" }],
+        where: [{ column: "publisherId", operator: "eq", value: 1 }],
         orderBy: [{ column: "publishedAt", direction: "desc" }],
         limit: 10,
         offset: 0
@@ -46,7 +46,7 @@ describe("requestBodySchema", () => {
   test("operator が eq 以外のとき拒否する", () => {
     expect(() => {
       return requestBodySchema.parse({
-        where: [{ column: "publisherName", operator: "like", value: "Zenn" }]
+        where: [{ column: "publisherId", operator: "like", value: 1 }]
       })
     }).toThrow()
   })

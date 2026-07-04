@@ -25,19 +25,19 @@ describe("ArticlePublisherFilter", () => {
 
   test("「全て」ボタンクリックで update:modelValue に null が emit される", async () => {
     const wrapper = await mountSuspended(ArticlePublisherFilter, {
-      props: { publishers: mockPublishers, modelValue: "Zenn" }
+      props: { publishers: mockPublishers, modelValue: 1 }
     })
     await wrapper.findAll("button").at(0)!.trigger("click")
     expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([null])
   })
 
-  test("publisher ボタンクリックで update:modelValue に publisher 名が emit される", async () => {
+  test("publisher ボタンクリックで update:modelValue に publisher の id が emit される", async () => {
     const wrapper = await mountSuspended(ArticlePublisherFilter, {
       props: { publishers: mockPublishers, modelValue: null }
     })
     // インデックス 1 = Zenn ボタン
     await wrapper.findAll("button").at(1)!.trigger("click")
-    expect(wrapper.emitted("update:modelValue")?.[0]).toEqual(["Zenn"])
+    expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([1])
   })
 
   test("publishers が空のとき「全て」ボタンのみ表示される", async () => {
