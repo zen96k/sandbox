@@ -32,15 +32,10 @@ const createMockedPage = async (): Promise<Page> => {
 
   await page.route("**/api/article/fetch", async (route) => {
     const body = route.request().postDataJSON()
-    const { where, offset = 0, limit = 10 } = body
-    const publisherFilter = (
-      where as { column: string; value: number }[] | undefined
-    )?.find((w) => {
-      return w.column === "publisherId"
-    })
-    const filtered = publisherFilter
+    const { publisherId, offset = 0, limit = 10 } = body
+    const filtered = publisherId
       ? ARTICLES.filter((a) => {
-          return a.publisherId === publisherFilter.value
+          return a.publisherId === publisherId
         })
       : ARTICLES
     await route.fulfill({

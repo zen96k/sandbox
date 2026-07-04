@@ -1,8 +1,14 @@
-import type { ArticleType, PublisherType, ReadOptionType } from "../../repository/article"
+import type {
+  ArticleQueryOptionType,
+  ArticleType,
+  PublisherType
+} from "../../repository/article"
 
 export type ArticleRepositoryType = {
-  readArticles(option?: ReadOptionType): Promise<ArticleType[]>
-  countArticles(option?: ReadOptionType): Promise<number>
+  readArticles(option?: ArticleQueryOptionType): Promise<ArticleType[]>
+  countArticles(
+    option?: Pick<ArticleQueryOptionType, "publisherId">
+  ): Promise<number>
   readPublishers(): Promise<PublisherType[]>
 }
 
@@ -12,12 +18,16 @@ export const generateArticleService = ({
   repository: ArticleRepositoryType
 }) => {
   return {
-    readArticles: async (option?: ReadOptionType): Promise<ArticleType[]> => {
+    readArticles: async (
+      option?: ArticleQueryOptionType
+    ): Promise<ArticleType[]> => {
       return await repository.readArticles(option)
     },
 
-    countArticles: async (option?: ReadOptionType): Promise<number> => {
-      return await repository.countArticles(option)
+    countArticles: async ({
+      publisherId
+    }: Pick<ArticleQueryOptionType, "publisherId"> = {}): Promise<number> => {
+      return await repository.countArticles({ publisherId })
     },
 
     readPublishers: async (): Promise<PublisherType[]> => {

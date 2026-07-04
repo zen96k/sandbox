@@ -10,44 +10,19 @@ describe("requestBodySchema", () => {
 
   test("有効なボディを受け入れる", () => {
     expect(() => {
-      return requestBodySchema.parse({
-        where: [{ column: "publisherId", operator: "eq", value: 1 }],
-        orderBy: [{ column: "publishedAt", direction: "desc" }],
-        limit: 10,
-        offset: 0
-      })
+      return requestBodySchema.parse({ publisherId: 1, limit: 10, offset: 0 })
     }).not.toThrow()
   })
 
-  test("direction が asc/desc 以外のとき拒否する", () => {
+  test("publisherId が正の整数でないとき拒否する", () => {
     expect(() => {
-      return requestBodySchema.parse({
-        orderBy: [{ column: "publishedAt", direction: "invalid" }]
-      })
+      return requestBodySchema.parse({ publisherId: 0 })
     }).toThrow()
   })
 
-  test("where.column が不明なカラムのとき拒否する", () => {
+  test("publisherId が小数のとき拒否する", () => {
     expect(() => {
-      return requestBodySchema.parse({
-        where: [{ column: "unknown", operator: "eq", value: "x" }]
-      })
-    }).toThrow()
-  })
-
-  test("orderBy.column が不明なカラムのとき拒否する", () => {
-    expect(() => {
-      return requestBodySchema.parse({
-        orderBy: [{ column: "unknown", direction: "asc" }]
-      })
-    }).toThrow()
-  })
-
-  test("operator が eq 以外のとき拒否する", () => {
-    expect(() => {
-      return requestBodySchema.parse({
-        where: [{ column: "publisherId", operator: "like", value: 1 }]
-      })
+      return requestBodySchema.parse({ publisherId: 1.5 })
     }).toThrow()
   })
 

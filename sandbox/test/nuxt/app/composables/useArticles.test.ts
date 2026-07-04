@@ -190,19 +190,17 @@ describe("useArticles", () => {
     expect(mockUseFetchFn.mock.calls[0]![1].method).toBe("POST")
   })
 
-  test("selectedPublisher なしのとき useFetch body に where 句が含まれない", async () => {
+  test("selectedPublisher なしのとき useFetch body に publisherId が含まれない", async () => {
     await useArticles({ articleLimit: readonly(ref(10)) })
     const body = mockUseFetchFn.mock.calls[0]![1].body
-    expect(body.value.where).toBeUndefined()
+    expect(body.value.publisherId).toBeUndefined()
   })
 
-  test("selectedPublisher ありのとき useFetch body に publisherId の where 句が含まれる", async () => {
+  test("selectedPublisher ありのとき useFetch body に publisherId が含まれる", async () => {
     await useRouter().replace({ query: { publisher: "1" } })
     await useArticles({ articleLimit: readonly(ref(10)) })
     const body = mockUseFetchFn.mock.calls[0]![1].body
-    expect(body.value.where).toEqual([
-      { column: "publisherId", operator: "eq", value: 1 }
-    ])
+    expect(body.value.publisherId).toBe(1)
   })
 
   test("page=3・limit=10 のとき offset が 20 になる", async () => {

@@ -49,16 +49,7 @@ export const useArticles = async ({
     method: "POST",
     body: computed(() => {
       return {
-        orderBy: [{ column: "publishedAt", direction: "desc" }],
-        where: selectedPublisher.value
-          ? [
-              {
-                column: "publisherId",
-                operator: "eq",
-                value: selectedPublisher.value
-              }
-            ]
-          : undefined,
+        publisherId: selectedPublisher.value ?? undefined,
         limit: articleLimit.value,
         offset: (page.value - 1) * articleLimit.value
       }
