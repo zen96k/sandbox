@@ -1,7 +1,7 @@
 import { count, eq } from "drizzle-orm"
 import type { LibSQLDatabase } from "drizzle-orm/libsql"
 import type * as schema from "../../db/schema"
-import { article, publisher } from "../../db/schema"
+import { article, articleSummary, publisher } from "../../db/schema"
 import {
   type WhereConditionType,
   buildOrderSQL,
@@ -15,6 +15,8 @@ export type ArticleType = {
   author: string
   publishedAt: Date
   publisherName: string
+  summary: string | null
+  summaryStatus: string | null
 }
 
 export type PublisherType = { id: number; name: string }
@@ -53,10 +55,13 @@ export const generateArticleRepository = ({
           url: article.url,
           author: article.author,
           publishedAt: article.publishedAt,
-          publisherName: publisher.name
+          publisherName: publisher.name,
+          summary: articleSummary.summary,
+          summaryStatus: articleSummary.status
         })
         .from(article)
         .innerJoin(publisher, eq(article.publisherId, publisher.id))
+        .leftJoin(articleSummary, eq(article.id, articleSummary.articleId))
         .$dynamic()
 
       const whereSQL = buildWhereSQL({
