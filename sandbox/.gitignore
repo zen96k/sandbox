@@ -25,6 +25,4 @@ logs
 !.env.example
 
 # Database
-*.db
-*.db-shm
-*.db-wal
+*.sqlite
