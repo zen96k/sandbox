@@ -1,5 +1,4 @@
 {
-  "effortLevel": "medium",
   "enabledMcpjsonServers": ["github"],
   "enableAllProjectMcpServers": true
 }
