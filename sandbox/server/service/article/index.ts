@@ -5,8 +5,10 @@ import type {
 } from "../../repository/article"
 
 export type ArticleRepositoryType = {
-  readArticles(option?: ArticleQueryOptionType): Promise<ArticleType[]>
-  countArticles(
+  readArticlesByPublisherId(
+    option?: ArticleQueryOptionType
+  ): Promise<ArticleType[]>
+  countArticlesByPublisherId(
     option?: Pick<ArticleQueryOptionType, "publisherId">
   ): Promise<number>
   readPublishers(): Promise<PublisherType[]>
@@ -18,16 +20,16 @@ export const generateArticleService = ({
   repository: ArticleRepositoryType
 }) => {
   return {
-    readArticles: async (
-      option?: ArticleQueryOptionType
+    readArticlesByPublisherId: async (
+      option: ArticleQueryOptionType = {}
     ): Promise<ArticleType[]> => {
-      return await repository.readArticles(option)
+      return await repository.readArticlesByPublisherId(option)
     },
 
-    countArticles: async ({
+    countArticlesByPublisherId: async ({
       publisherId
     }: Pick<ArticleQueryOptionType, "publisherId"> = {}): Promise<number> => {
-      return await repository.countArticles({ publisherId })
+      return await repository.countArticlesByPublisherId({ publisherId })
     },
 
     readPublishers: async (): Promise<PublisherType[]> => {
