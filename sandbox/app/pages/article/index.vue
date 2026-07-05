@@ -1,6 +1,17 @@
 <template>
   <UContainer class="py-8">
     <h1 class="mb-6 text-2xl font-bold">記事一覧</h1>
+    <ArticlePublisherFilter
+      v-model="selectedPublisher"
+      :publishers="publishers"
+    />
+    <div class="mb-4 flex justify-center">
+      <UPagination
+        v-model:page="page"
+        :items-per-page="articleLimit"
+        :total="total"
+      />
+    </div>
     <div
       v-if="status === 'pending'"
       class="flex justify-center py-12"
@@ -16,40 +27,27 @@
     >
       記事を取得できませんでした
     </div>
+    <div
+      v-else-if="!articles.length"
+      class="py-12 text-center text-gray-500"
+    >
+      記事がありません
+    </div>
     <template v-else>
-      <ArticlePublisherFilter
-        v-model="selectedPublisher"
-        :publishers="publishers"
-      />
-      <div
-        v-if="!articles.length"
-        class="py-12 text-center text-gray-500"
-      >
-        記事がありません
+      <UPageGrid as="ul">
+        <ArticleCard
+          v-for="article in articles"
+          :key="article.id"
+          :article="article"
+        />
+      </UPageGrid>
+      <div class="mt-8 flex justify-center">
+        <UPagination
+          v-model:page="page"
+          :items-per-page="articleLimit"
+          :total="total"
+        />
       </div>
-      <template v-else>
-        <div class="mb-4 flex justify-center">
-          <UPagination
-            v-model:page="page"
-            :items-per-page="articleLimit"
-            :total="total"
-          />
-        </div>
-        <UPageGrid as="ul">
-          <ArticleCard
-            v-for="article in articles"
-            :key="article.id"
-            :article="article"
-          />
-        </UPageGrid>
-        <div class="mt-8 flex justify-center">
-          <UPagination
-            v-model:page="page"
-            :items-per-page="articleLimit"
-            :total="total"
-          />
-        </div>
-      </template>
     </template>
   </UContainer>
 </template>
