@@ -30,5 +30,4 @@ jobs:
         with:
           working_directory: sandbox
       - run: npm clean-install
-      - run: npx playwright-core install chromium
       - run: npm run test -- --reporter=default --reporter=github-actions
