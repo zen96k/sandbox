@@ -26,6 +26,9 @@
       class="py-12 text-center text-gray-500"
     >
       記事を取得できませんでした
+      <template v-if="error?.statusMessage">
+        ({{ error.statusMessage }})
+      </template>
     </div>
     <div
       v-else-if="!articles.length"
@@ -68,6 +71,13 @@
 
   const articleLimit = 15
 
-  const { selectedPublisher, page, total, articles, publishers, status } =
-    await useArticles({ articleLimit })
+  const {
+    selectedPublisher,
+    page,
+    total,
+    articles,
+    publishers,
+    status,
+    error
+  } = await useArticles({ articleLimit })
 </script>
