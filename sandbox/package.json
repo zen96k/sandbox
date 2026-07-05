@@ -8,7 +8,7 @@
     "preview": "nuxt preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "postinstall": "nuxt prepare"
+    "postinstall": "npx -y playwright install-deps && npx -y playwright-core install chromium && nuxt prepare"
   },
   "dependencies": {
     "@formkit/tempo": "1.1.0",
