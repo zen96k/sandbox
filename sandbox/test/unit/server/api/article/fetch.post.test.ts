@@ -50,6 +50,16 @@ describe("requestBodySchema", () => {
     }).toThrow()
   })
 
+  test("limit を省略したとき既定値15になる", () => {
+    expect(requestBodySchema.parse({}).limit).toBe(15)
+  })
+
+  test("limit が15を超えるとき拒否する", () => {
+    expect(() => {
+      return requestBodySchema.parse({ limit: 16 })
+    }).toThrow()
+  })
+
   test("offset が小数のとき拒否する", () => {
     expect(() => {
       return requestBodySchema.parse({ offset: 1.5 })
@@ -59,6 +69,18 @@ describe("requestBodySchema", () => {
   test("offset が 0 のとき受け入れる", () => {
     expect(() => {
       return requestBodySchema.parse({ offset: 0 })
+    }).not.toThrow()
+  })
+
+  test("offset が10000を超えるとき拒否する", () => {
+    expect(() => {
+      return requestBodySchema.parse({ offset: 10001 })
+    }).toThrow()
+  })
+
+  test("offset が10000のとき受け入れる", () => {
+    expect(() => {
+      return requestBodySchema.parse({ offset: 10000 })
     }).not.toThrow()
   })
 })
