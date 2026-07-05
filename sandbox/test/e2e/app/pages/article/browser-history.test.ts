@@ -1,12 +1,13 @@
 import { getBrowser, setup, url, waitForHydration } from "@nuxt/test-utils/e2e"
+import { drizzle } from "drizzle-orm/libsql"
+import { migrate } from "drizzle-orm/libsql/migrator"
+import { mkdtemp, rm } from "node:fs/promises"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
 import { fileURLToPath } from "node:url"
 import type { Page } from "playwright-core"
-import { afterEach, describe, expect, test } from "vitest"
-
-await setup({
-  rootDir: fileURLToPath(new URL("../../../../..", import.meta.url)),
-  browser: true
-})
+import { afterAll, afterEach, beforeEach, describe, expect, test } from "vitest"
+import { article, publisher } from "../../../../../server/db/schema"
 
 // desktop (limit=15) で3ページ分確保するため 46 件
 const ARTICLES = Array.from({ length: 46 }, (_, i) => {
@@ -16,37 +17,39 @@ const ARTICLES = Array.from({ length: 46 }, (_, i) => {
     publisherId: i % 2 === 0 ? 2 : 1,
     url: `https://example.com/${i + 1}`,
     author: "author",
-    publishedAt: "2026-01-01",
-    summary: null
+    publishedAt: new Date("2026-01-01")
   }
 })
 
 const PUBLISHERS = [
-  { id: 1, name: "Qiita" },
-  { id: 2, name: "Zenn" }
+  { id: 1, name: "Qiita", url: "https://qiita.com/popular-items/feed.atom" },
+  { id: 2, name: "Zenn", url: "https://zenn.dev/feed" }
 ]
 
-const createMockedPage = async (): Promise<Page> => {
-  const page = await (await getBrowser()).newPage()
-  page.setDefaultTimeout(90000)
+const tmpDirectoryName = await mkdtemp(join(tmpdir(), "browser-history-e2e-"))
+const dbFileName = `file:${join(tmpDirectoryName, "test.sqlite")}`
 
-  await page.route("**/api/article/fetch", async (route) => {
-    const body = route.request().postDataJSON()
-    const { publisherId, offset = 0, limit = 10 } = body
-    const filtered = publisherId
-      ? ARTICLES.filter((a) => {
-          return a.publisherId === publisherId
-        })
-      : ARTICLES
-    await route.fulfill({
-      contentType: "application/json",
-      body: JSON.stringify({
-        articles: filtered.slice(offset, offset + limit),
-        total: filtered.length,
-        publishers: PUBLISHERS
-      })
-    })
-  })
+const db = drizzle(dbFileName)
+await migrate(db, {
+  migrationsFolder: fileURLToPath(
+    new URL("../../../../../drizzle", import.meta.url)
+  )
+})
+await db.insert(publisher).values(PUBLISHERS)
+await db.insert(article).values(ARTICLES)
+
+afterAll(async () => {
+  await rm(tmpDirectoryName, { recursive: true, force: true })
+})
+
+await setup({
+  rootDir: fileURLToPath(new URL("../../../../..", import.meta.url)),
+  browser: true,
+  env: { DB_FILE_NAME: dbFileName }
+})
+
+const createPage = async (): Promise<Page> => {
+  const page = await (await getBrowser()).newPage()
 
   return page
 }
@@ -54,12 +57,15 @@ const createMockedPage = async (): Promise<Page> => {
 describe("記事一覧 - ブラウザ履歴", () => {
   let page: Page
 
+  beforeEach(async () => {
+    page = await createPage()
+  })
+
   afterEach(async () => {
     await page.close()
   })
 
   test("ページ送りが履歴に積まれる", async () => {
-    page = await createMockedPage()
     await page.goto(url("/article"))
     await waitForHydration(page, url("/article"), "hydration")
 
@@ -79,7 +85,6 @@ describe("記事一覧 - ブラウザ履歴", () => {
   })
 
   test("配信元フィルターが履歴に積まれる", async () => {
-    page = await createMockedPage()
     await page.goto(url("/article"))
     await waitForHydration(page, url("/article"), "hydration")
 
@@ -94,7 +99,6 @@ describe("記事一覧 - ブラウザ履歴", () => {
   })
 
   test("配信元切り替え時にページが 1 にリセットされる", async () => {
-    page = await createMockedPage()
     await page.goto(url("/article?page=3"))
     await waitForHydration(page, url("/article?page=3"), "hydration")
 
@@ -108,7 +112,6 @@ describe("記事一覧 - ブラウザ履歴", () => {
   })
 
   test("URL直接アクセスが正しく表示される", async () => {
-    page = await createMockedPage()
     await page.goto(url("/article?page=2&publisher=2"))
     await page.waitForLoadState("networkidle")
 
