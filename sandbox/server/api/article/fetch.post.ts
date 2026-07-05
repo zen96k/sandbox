@@ -21,6 +21,10 @@ export default defineEventHandler(async (event) => {
 
     return { articles, total, publishers }
   } catch (error) {
-    throw createError({ statusCode: 500, cause: error })
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Internal Server Error",
+      cause: error
+    })
   }
 })
