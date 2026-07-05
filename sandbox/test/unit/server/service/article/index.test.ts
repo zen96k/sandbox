@@ -7,49 +7,49 @@ describe("generateArticleService", () => {
 
   test("limitとoffsetをリポジトリに渡す", async () => {
     const repository = {
-      readArticles: vi.fn().mockResolvedValue([]),
-      countArticles: vi.fn(),
+      readArticlesByPublisherId: vi.fn().mockResolvedValue([]),
+      countArticlesByPublisherId: vi.fn(),
       readPublishers: vi.fn()
     }
     const service = generateArticleService({ repository })
 
-    await service.readArticles({ limit: 10, offset: 20 })
+    await service.readArticlesByPublisherId({ limit: 10, offset: 20 })
 
-    expect(repository.readArticles).toHaveBeenCalledWith(
+    expect(repository.readArticlesByPublisherId).toHaveBeenCalledWith(
       expect.objectContaining({ limit: 10, offset: 20 })
     )
   })
 
   test("publisherIdをそのままリポジトリに渡す", async () => {
     const repository = {
-      readArticles: vi.fn().mockResolvedValue([]),
-      countArticles: vi.fn(),
+      readArticlesByPublisherId: vi.fn().mockResolvedValue([]),
+      countArticlesByPublisherId: vi.fn(),
       readPublishers: vi.fn()
     }
     const service = generateArticleService({ repository })
 
-    await service.readArticles({ publisherId: 1 })
+    await service.readArticlesByPublisherId({ publisherId: 1 })
 
-    expect(repository.readArticles).toHaveBeenCalledWith(
+    expect(repository.readArticlesByPublisherId).toHaveBeenCalledWith(
       expect.objectContaining({ publisherId: 1 })
     )
   })
 
-  test("countArticlesをリポジトリに委譲して件数を返す", async () => {
+  test("countArticlesByPublisherIdをリポジトリに委譲して件数を返す", async () => {
     const repository = {
-      readArticles: vi.fn(),
-      countArticles: vi.fn().mockResolvedValue(3),
+      readArticlesByPublisherId: vi.fn(),
+      countArticlesByPublisherId: vi.fn().mockResolvedValue(3),
       readPublishers: vi.fn()
     }
     const service = generateArticleService({ repository })
 
-    await expect(service.countArticles({})).resolves.toBe(3)
+    await expect(service.countArticlesByPublisherId({})).resolves.toBe(3)
   })
 
   test("readPublishersをリポジトリに委譲する", async () => {
     const repository = {
-      readArticles: vi.fn(),
-      countArticles: vi.fn(),
+      readArticlesByPublisherId: vi.fn(),
+      countArticlesByPublisherId: vi.fn(),
       readPublishers: vi.fn().mockResolvedValue(publishers)
     }
     const service = generateArticleService({ repository })

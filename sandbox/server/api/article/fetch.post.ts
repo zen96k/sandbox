@@ -12,8 +12,10 @@ export default defineEventHandler(async (event) => {
 
   try {
     const [articles, total, publishers] = await Promise.all([
-      articleService.readArticles(requestBody),
-      articleService.countArticles({ publisherId: requestBody.publisherId }),
+      articleService.readArticlesByPublisherId(requestBody),
+      articleService.countArticlesByPublisherId({
+        publisherId: requestBody.publisherId
+      }),
       articleService.readPublishers()
     ])
 
