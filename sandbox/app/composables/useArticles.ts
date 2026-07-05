@@ -43,7 +43,7 @@ export const useArticles = async ({
     }
   })
 
-  const { data, status } = await useFetch("/api/article/fetch", {
+  const { data, status, error } = await useFetch("/api/article/fetch", {
     method: "POST",
     body: computed(() => {
       return {
@@ -64,5 +64,5 @@ export const useArticles = async ({
     return data.value?.publishers ?? []
   })
 
-  return { selectedPublisher, page, total, articles, publishers, status }
+  return { selectedPublisher, page, total, articles, publishers, status, error }
 }

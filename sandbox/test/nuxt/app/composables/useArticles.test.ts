@@ -27,7 +27,8 @@ const defaultFetchResult = () => {
       total: 1,
       publishers: [{ id: 1, name: "Zenn" }]
     }),
-    status: ref("success")
+    status: ref("success"),
+    error: ref(null)
   }
 }
 
@@ -85,6 +86,21 @@ describe("useArticles", () => {
   test("status が返り値に含まれる", async () => {
     const { status } = await useArticles({ articleLimit: 10 })
     expect(status.value).toBe("success")
+  })
+
+  test("成功時 error は null を返す", async () => {
+    const { error } = await useArticles({ articleLimit: 10 })
+    expect(error.value).toBeNull()
+  })
+
+  test("useFetch が失敗したとき error を返す", async () => {
+    mockUseFetchFn.mockReturnValue({
+      data: ref(null),
+      status: ref("error"),
+      error: ref({ statusMessage: "Internal Server Error" })
+    })
+    const { error } = await useArticles({ articleLimit: 10 })
+    expect(error.value).toEqual({ statusMessage: "Internal Server Error" })
   })
 
   // ルートクエリによる初期化
