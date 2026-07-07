@@ -1,0 +1,1 @@
+DROP INDEX `publisher_name_unique`;
