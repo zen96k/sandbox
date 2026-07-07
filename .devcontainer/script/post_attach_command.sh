@@ -11,3 +11,5 @@ cd ${PROJECT_DIRNAME}/sandbox
 
 mise install
 mise exec -- npm install
+
+pkill -f -- '--type=extensionHost'
