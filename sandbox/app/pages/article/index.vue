@@ -1,11 +1,11 @@
 <template>
   <UContainer class="py-8">
-    <h1 class="mb-6 text-2xl font-bold">記事一覧</h1>
+    <h1 class="my-4 text-2xl font-bold">記事一覧</h1>
     <ArticlePublisherFilter
       v-model="selectedPublisher"
       :publishers="publishers"
     />
-    <div class="mb-4 flex justify-center">
+    <div class="my-8 flex justify-center">
       <UPagination
         v-model:page="page"
         :items-per-page="articleLimit"
@@ -44,7 +44,7 @@
           :article="article"
         />
       </UPageGrid>
-      <div class="mt-8 flex justify-center">
+      <div class="my-8 flex justify-center">
         <UPagination
           v-model:page="page"
           :items-per-page="articleLimit"

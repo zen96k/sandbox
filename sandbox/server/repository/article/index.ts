@@ -1,7 +1,7 @@
 import { count, desc, eq } from "drizzle-orm"
 import type { LibSQLDatabase } from "drizzle-orm/libsql"
 import type * as schema from "../../db/schema"
-import { article, articleSummary, publisher } from "../../db/schema"
+import { article, publisher } from "../../db/schema"
 
 export type ArticleType = {
   id: number
@@ -10,8 +10,6 @@ export type ArticleType = {
   author: string
   publishedAt: Date
   publisherName: string
-  summary: string | null
-  summaryStatus: string | null
 }
 
 export type PublisherType = { id: number; name: string }
@@ -40,13 +38,10 @@ export const generateArticleRepository = ({
           url: article.url,
           author: article.author,
           publishedAt: article.publishedAt,
-          publisherName: publisher.name,
-          summary: articleSummary.summary,
-          summaryStatus: articleSummary.status
+          publisherName: publisher.name
         })
         .from(article)
         .innerJoin(publisher, eq(article.publisherId, publisher.id))
-        .leftJoin(articleSummary, eq(article.id, articleSummary.articleId))
         .$dynamic()
         .orderBy(desc(article.publishedAt))
 

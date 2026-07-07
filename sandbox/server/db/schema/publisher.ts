@@ -3,7 +3,7 @@ import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
 
 export const publisher = sqliteTable("publisher", {
   id: integer("id").primaryKey({ autoIncrement: true }),
-  name: text("name").notNull().unique(),
+  name: text("name").notNull(),
   url: text("url").notNull().unique(),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()

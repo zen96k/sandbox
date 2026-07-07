@@ -62,44 +62,4 @@ describe("ArticleCard", () => {
     })
     expect(wrapper.find("a").attributes("rel")).toBe("noopener noreferrer")
   })
-
-  test("summaryStatus が completed かつ summary がある場合、要約が表示される", async () => {
-    const wrapper = await mountSuspended(ArticleCard, {
-      props: {
-        article: {
-          ...mockArticle,
-          summary: "この記事はNuxt 4のテストについて解説しています。",
-          summaryStatus: "completed"
-        }
-      }
-    })
-    expect(wrapper.text()).toContain(
-      "この記事はNuxt 4のテストについて解説しています。"
-    )
-  })
-
-  test.each(["pending", "processing", "failed", null])(
-    "summaryStatus が %s の場合、要約は表示されない",
-    async (summaryStatus) => {
-      const wrapper = await mountSuspended(ArticleCard, {
-        props: {
-          article: {
-            ...mockArticle,
-            summary: "隠れているはずの要約",
-            summaryStatus
-          }
-        }
-      })
-      expect(wrapper.text()).not.toContain("隠れているはずの要約")
-    }
-  )
-
-  test("summary が null の場合、要約は表示されない", async () => {
-    const wrapper = await mountSuspended(ArticleCard, {
-      props: {
-        article: { ...mockArticle, summary: null, summaryStatus: "completed" }
-      }
-    })
-    expect(wrapper.find("p").exists()).toBe(false)
-  })
 })
