@@ -1,6 +1,6 @@
 <template>
   <li
-    class="hover:border-primary-400 h-60 overflow-hidden rounded-lg border border-gray-200 p-4 transition-colors"
+    class="hover:border-primary-400 h-44 overflow-hidden rounded-lg border border-gray-200 p-4 transition-colors"
   >
     <a
       class="group flex h-full flex-col"
@@ -9,16 +9,10 @@
       target="_blank"
     >
       <h2
-        class="group-hover:text-primary-500 line-clamp-3 text-base font-semibold transition-colors"
+        class="group-hover:text-primary-500 mb-2 line-clamp-3 text-base font-semibold transition-colors"
       >
         {{ article.title }}
       </h2>
-      <p
-        v-if="article.summaryStatus === 'completed' && article.summary"
-        class="mt-2 line-clamp-3 text-sm text-gray-500"
-      >
-        {{ article.summary }}
-      </p>
       <div
         class="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-500"
       >
@@ -48,8 +42,6 @@
       url: string
       author: string
       publishedAt: string | Date
-      summary?: string | null
-      summaryStatus?: string | null
     }
   }>()
 </script>
