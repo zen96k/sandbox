@@ -65,7 +65,7 @@
     ogDescription: "Qiita/Zennの個人用RSSリーダー",
     ogType: "website",
     ogUrl: `${requestUrl.origin}/article`,
-    ogImage: `${requestUrl.origin}/ogp.png`,
+    ogImage: `https://nuxt.com/assets/design-kit/logo-green-white.png`,
     twitterCard: "summary_large_image"
   })
 
